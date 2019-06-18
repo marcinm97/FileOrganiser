@@ -80,6 +80,9 @@
 				</MakeCommands>
 			</Target>
 		</Build>
+		<Unit filename="C:/Users/Marcin/CLionProjects/FileOrganiser/FileOrganiser.h">
+			<Option target="FileOrganiser"/>
+		</Unit>
 		<Unit filename="C:/Users/Marcin/CLionProjects/FileOrganiser/main.cpp">
 			<Option target="FileOrganiser"/>
 		</Unit>
