@@ -12,32 +12,82 @@ using namespace std::experimental;
 // 1. Changing filenames
 // 2. Show extensions
 // 3. Show current state of files (real time)
-// 4.
+// 4. ...
 namespace FileManage{
 
+    namespace Window{
+
+        struct Display{
+            int width;
+            int height;
+            int sepBar = 0.9* height;
+            char border = '#';
+        };
+
+    }
+
+
+    namespace fs = filesystem;
+
+    static constexpr const char* dir_name = "MonitFiles";
 
     class FileOrganiser{
     public:
-        FileOrganiser(const std::string& main_dir): origin_directory(main_dir), monit(main_dir, std::chrono::milliseconds(5000)){
-            if(!filesystem::exists(origin_directory))
-                filesystem::create_directory(origin_directory);
+
+        FileOrganiser(const fs::path& main_dir): origin_directory(main_dir),
+        monit(main_dir.string(), std::chrono::milliseconds(5000)), board{80,20} {
+
+
         }
 
         template<typename T>
         void setFileNameIf(std::function<T()> const& pred); // or new menu to change options ...
         void changeSingleFileName();
         void changeDirectory();
+        void showAllContainedFiles();
         void addFiles();        // only message "Add your files to given directory ... "
         void createDirectory(); // create and change for this dir
         void displayAllContainedExtensions();
-        void startManager();    // main user-output
-    protected:
-        void drawMenu();        // method use to draw all menu elements
+        void startManager();    // main user-output                       2.
+   // protected:
+        void drawMenu();        // method use to draw all menu elements   1.
     private:
-        std::string origin_directory;
-        FileChecker monit;      // only for notify about newest changes (alert border)
+        filesystem::path origin_directory;
+        FileChecker monit;      // only for no tify about newest changes (alert border)
+        Window::Display board;
     };
+
+    // DEFINITIONS
+
+    void FileOrganiser::drawMenu() {
+        // draw area
+        std::string w(board.width, board.border);
+
+        std::cout << w << "\n";
+
+        for(unsigned int x = 0; x < board.height; ++x){
+            if(x == board.sepBar)
+                std::cout << w<<"\n";
+            else{
+                for(unsigned int y = 0; y < board.width; ++y) {
+
+                    if (y == 0 || y == board.width - 1) {
+                        std::cout << board.border;
+                    }else {
+                        std::cout << " ";
+                    }
+                }
+                std::cout<<"\n";
+            }
+        }
+        std::cout << w;
+    }
+
+
+
 }
+
+
 
 
 
