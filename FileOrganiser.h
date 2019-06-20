@@ -20,7 +20,7 @@ namespace FileManage{
         struct Display{
             int width;
             int height;
-            int sepBar = 0.9* height;
+            int sepBar = height < 10 ? 0.9* height - 1 : 0.9 * height;
             char border = '#';
         };
 
@@ -35,7 +35,7 @@ namespace FileManage{
     public:
 
         FileOrganiser(const fs::path& main_dir): origin_directory(main_dir),
-        monit(main_dir.string(), std::chrono::milliseconds(5000)), board{80,20} {
+            monit(main_dir.string(), std::chrono::milliseconds(5000)), board{80,20} {
 
 
         }
@@ -49,42 +49,13 @@ namespace FileManage{
         void createDirectory(); // create and change for this dir
         void displayAllContainedExtensions();
         void startManager();    // main user-output                       2.
-   // protected:
+        // protected:
         void drawMenu();        // method use to draw all menu elements   1.
     private:
         filesystem::path origin_directory;
         FileChecker monit;      // only for no tify about newest changes (alert border)
         Window::Display board;
     };
-
-    // DEFINITIONS
-
-    void FileOrganiser::drawMenu() {
-        // draw area
-        std::string w(board.width, board.border);
-
-        std::cout << w << "\n";
-
-        for(unsigned int x = 0; x < board.height; ++x){
-            if(x == board.sepBar)
-                std::cout << w<<"\n";
-            else{
-                for(unsigned int y = 0; y < board.width; ++y) {
-
-                    if (y == 0 || y == board.width - 1) {
-                        std::cout << board.border;
-                    }else {
-                        std::cout << " ";
-                    }
-                }
-                std::cout<<"\n";
-            }
-        }
-        std::cout << w;
-    }
-
-
-
 }
 
 

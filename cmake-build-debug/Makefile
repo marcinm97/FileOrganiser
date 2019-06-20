@@ -122,6 +122,33 @@ FileOrganiser/fast:
 	$(MAKE) -f CMakeFiles\FileOrganiser.dir\build.make CMakeFiles/FileOrganiser.dir/build
 .PHONY : FileOrganiser/fast
 
+FileOrganiser.obj: FileOrganiser.cpp.obj
+
+.PHONY : FileOrganiser.obj
+
+# target to build an object file
+FileOrganiser.cpp.obj:
+	$(MAKE) -f CMakeFiles\FileOrganiser.dir\build.make CMakeFiles/FileOrganiser.dir/FileOrganiser.cpp.obj
+.PHONY : FileOrganiser.cpp.obj
+
+FileOrganiser.i: FileOrganiser.cpp.i
+
+.PHONY : FileOrganiser.i
+
+# target to preprocess a source file
+FileOrganiser.cpp.i:
+	$(MAKE) -f CMakeFiles\FileOrganiser.dir\build.make CMakeFiles/FileOrganiser.dir/FileOrganiser.cpp.i
+.PHONY : FileOrganiser.cpp.i
+
+FileOrganiser.s: FileOrganiser.cpp.s
+
+.PHONY : FileOrganiser.s
+
+# target to generate assembly for a file
+FileOrganiser.cpp.s:
+	$(MAKE) -f CMakeFiles\FileOrganiser.dir\build.make CMakeFiles/FileOrganiser.dir/FileOrganiser.cpp.s
+.PHONY : FileOrganiser.cpp.s
+
 main.obj: main.cpp.obj
 
 .PHONY : main.obj
@@ -158,6 +185,9 @@ help:
 	@echo ... FileOrganiser
 	@echo ... edit_cache
 	@echo ... rebuild_cache
+	@echo ... FileOrganiser.obj
+	@echo ... FileOrganiser.i
+	@echo ... FileOrganiser.s
 	@echo ... main.obj
 	@echo ... main.i
 	@echo ... main.s

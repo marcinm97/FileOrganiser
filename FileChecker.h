@@ -12,6 +12,7 @@
 #include <set>
 #include <algorithm>
 #include <iterator>
+#include <iostream>
 
 enum class State {Created, Modified, Removed};
 using namespace std::experimental;

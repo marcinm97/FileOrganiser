@@ -1,5 +1,6 @@
 file(REMOVE_RECURSE
   "CMakeFiles/FileOrganiser.dir/main.cpp.obj"
+  "CMakeFiles/FileOrganiser.dir/FileOrganiser.cpp.obj"
   "FileOrganiser.pdb"
   "FileOrganiser.exe"
   "FileOrganiser.exe.manifest"

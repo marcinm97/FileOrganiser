@@ -3,4 +3,4 @@ project(FileOrganiser)
 
 set(CMAKE_CXX_STANDARD 17)
 link_libraries(stdc++fs)
-add_executable(FileOrganiser main.cpp FileOrganiser.h)
+add_executable(FileOrganiser main.cpp FileOrganiser.cpp FileOrganiser.h FileChecker.h)
