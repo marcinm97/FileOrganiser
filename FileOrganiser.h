@@ -6,6 +6,8 @@
 #include <string>
 #include <iostream>
 #include <algorithm>
+#include <list>
+#include <optional>
 
 using namespace std::experimental;
 
@@ -22,6 +24,7 @@ namespace FileManage{
             int height;
             int sepBar = height < 10 ? 0.9* height - 1 : 0.9 * height;
             char border = '#';
+            int menuCorner = 3;
         };
 
     }
@@ -52,6 +55,8 @@ namespace FileManage{
         // protected:
         void drawMenu();        // method use to draw all menu elements   1.
     private:
+        void createSmartMenu();
+        std::list<std::string> menu;
         filesystem::path origin_directory;
         FileChecker monit;      // only for no tify about newest changes (alert border)
         Window::Display board;

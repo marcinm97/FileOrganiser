@@ -47,10 +47,8 @@ iostream
 -
 algorithm
 -
-
-C:/Users/Marcin/CLionProjects/FileOrganiser/main.cpp
-iostream
+list
 -
-FileOrganiser.h
-C:/Users/Marcin/CLionProjects/FileOrganiser/FileOrganiser.h
+optional
+-
 
