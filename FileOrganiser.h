@@ -22,7 +22,7 @@ namespace FileManage{
         struct Display{
             int width;
             int height;
-            int sepBar = height < 10 ? 0.9* height - 1 : 0.9 * height;
+            int sepBar = height <= 10 ? 0.9* height - 1 : 0.9 * height;
             char border = '#';
             int menuCorner = 3;
         };

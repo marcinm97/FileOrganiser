@@ -23,7 +23,7 @@ namespace FileManage{
                 std::cout << w <<"\n";
             else{
                 for(unsigned int y = 0; y < board.width; ++y) {
-                    if(x < board.menuCorner || x > board.height - board.menuCorner - menu.size() - 3){
+                    if(x < board.menuCorner || x > board.menuCorner + menu.size() - 1){
                         if (y == 0 || y == board.width - 1) {   // ++ else if (MENU)
                             std::cout << board.border;
                         }else {
