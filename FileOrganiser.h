@@ -38,11 +38,12 @@ namespace FileManage{
     public:
 
         FileOrganiser(const fs::path& main_dir): origin_directory(main_dir),
-            monit(main_dir.string(), std::chrono::milliseconds(5000)), board{80,20} {
-
+            monit(main_dir.string(), std::chrono::milliseconds(5000)), board{80,14} {
+            createSmartMenu();
 
         }
 
+        void run();
         template<typename T>
         void setFileNameIf(std::function<T()> const& pred); // or new menu to change options ...
         void changeSingleFileName();
@@ -55,10 +56,23 @@ namespace FileManage{
         // protected:
         void drawMenu();        // method use to draw all menu elements   1.
     private:
+        enum class Options{
+            CreateDir = 1,
+            ChangeDir,
+            DispFiles,
+            AddFiles,
+            Filenames,
+            Monit,
+            Exit
+        };
+
+        void showMessage();
+        Options curr_option;
+        bool ifRun = true;
         void createSmartMenu();
         std::list<std::string> menu;
         filesystem::path origin_directory;
-        FileChecker monit;      // only for no tify about newest changes (alert border)
+        FileChecker monit;      // only for notify about newest changes (alert border)
         Window::Display board;
     };
 }

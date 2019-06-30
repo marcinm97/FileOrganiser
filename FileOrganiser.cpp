@@ -2,10 +2,50 @@
 
 namespace FileManage{
 
+
+    void FileOrganiser::run(){
+
+        int temp;
+
+        while(ifRun){
+            drawMenu();
+            std::cin>>temp;
+            curr_option = static_cast<Options>(temp);
+
+            switch(curr_option){
+                case Options::CreateDir:
+                    break;
+                case Options::ChangeDir:
+                    break;
+                case Options::DispFiles:
+                    break;
+                case Options::AddFiles:
+                    break;
+                case Options::Filenames:
+                    break;
+                case Options::Monit:
+                    break;
+                case Options::Exit:
+                    ifRun = false;
+                    break;
+                default:
+                    std::cout<<"Blad";
+                    ifRun = false;
+                    break;
+            }
+            system("cls");
+        }
+    }
+
+
+
     void FileOrganiser::drawMenu(){
         // draw area
-        createSmartMenu();
+        // if update is accessible - do it
+
+
         auto mainMenu = menu;
+
         auto getMenuOption([&mainMenu]() {
             if(!mainMenu.empty()){
                 auto tmp = mainMenu.front();
@@ -24,7 +64,7 @@ namespace FileManage{
             else{
                 for(unsigned int y = 0; y < board.width; ++y) {
                     if(x < board.menuCorner || x > board.menuCorner + menu.size() - 1){
-                        if (y == 0 || y == board.width - 1) {   // ++ else if (MENU)
+                        if (y == 0 || y == board.width - 1) {
                             std::cout << board.border;
                         }else {
                             std::cout << " ";
@@ -39,6 +79,9 @@ namespace FileManage{
             }
         }
         std::cout << w;
+
+        std::cout<<"\n-> YOUR CHOICE: ";
+
     }
 
 
@@ -52,7 +95,8 @@ namespace FileManage{
             "3. Show files.",
             "4. Add files.",
             "5. Change filenames (types).",
-            "6. Exit."
+            "6. Turn On/Off file monitor.",
+            "7. Exit."
         };
 
         auto makeOption([this, startText](std::string opt) -> std::optional<std::string>{
