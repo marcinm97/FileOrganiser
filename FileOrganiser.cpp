@@ -31,6 +31,8 @@ namespace FileManage{
                     }
                     break;
                 case Options::Exit:
+                    if(fileMonitor)
+                        monit.breakChecking();
                     ifRun = false;
                     break;
                 default:

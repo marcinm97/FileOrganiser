@@ -123,6 +123,11 @@ public:
         }
     }
 
+    void breakChecking(){
+        if(run)
+            run = false;   // break success
+    }
+
     extens getSetOfExtensions(){                 // return current available extensions
         std::set<std::string> ext;
 
