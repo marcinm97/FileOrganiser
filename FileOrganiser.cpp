@@ -8,12 +8,13 @@ namespace FileManage{
         int temp;
 
         while(ifRun){
-            drawMenu();
+            update();
+
             std::cin>>temp;
             curr_option = static_cast<Options>(temp);
 
             switch(curr_option){
-                case Options::CreateDir:
+                case Options::CreateDir:  // 1.
                     break;
                 case Options::ChangeDir:
                     break;
@@ -23,7 +24,11 @@ namespace FileManage{
                     break;
                 case Options::Filenames:
                     break;
-                case Options::Monit:
+                case Options::Monit:      // 6.
+                    if(!fileMonitor){
+                        runFileMonitor();
+                        fileMonitor = true;
+                    }
                     break;
                 case Options::Exit:
                     ifRun = false;
@@ -33,11 +38,14 @@ namespace FileManage{
                     ifRun = false;
                     break;
             }
-            system("cls");
+
         }
     }
 
-
+    void FileOrganiser::update(){
+        system("cls");
+        drawMenu();
+    }
 
     void FileOrganiser::drawMenu(){
         // draw area
@@ -54,13 +62,18 @@ namespace FileManage{
             }
         });
 
+
         std::string w(board.width, board.border);
+
+
 
         std::cout << w << "\n";
 
         for(unsigned int x = 0; x < board.height; ++x){
             if(x == board.sepBar)
-                std::cout << w <<"\n";
+                std::cout << w <<"\n"; // here
+            else if(x == board.sepBar + 1 && notification && fileMonitor)
+                std::cout << textLineCreator(*notification)<<"\n";
             else{
                 for(unsigned int y = 0; y < board.width; ++y) {
                     if(x < board.menuCorner || x > board.menuCorner + menu.size() - 1){
@@ -70,8 +83,7 @@ namespace FileManage{
                             std::cout << " ";
                         }
                     }else{
-                        std::cout << getMenuOption(); //mainMenu.front();
-                        //mainMenu.pop_front();
+                        std::cout << getMenuOption();
                         y=board.width;
                     }
                 }
@@ -80,14 +92,39 @@ namespace FileManage{
         }
         std::cout << w;
 
-        std::cout<<"\n-> YOUR CHOICE: ";
+        std::cout<<"\n->  YOUR CHOICE: ";
 
     }
 
+    void FileOrganiser::runFileMonitor(){         // FILE MONITOR (OTHER THREAD)
+
+        if(!notification){
+            notification.emplace("START CHECKING...");
+            update();
+        }
+        //auto& opt = notification;
+        //std::function<void()> refresh = std::bind(&FileOrganiser::update, this);
+        // avoid 'this' pointer in this lambda
+        monitThread = std::thread(&FileChecker::startChecking,&monit,[this](const std::string& path_, State type_of_change){
+            filesystem::path pth(path_);
+
+            auto msg = stateToString(type_of_change) + pth.filename().string();
+            notification.emplace(msg);
+            update();
+        });
+
+    }
+
+    std::string FileOrganiser::textLineCreator(const std::string& msg){
+        std::string line(board.width,' ');
+        line[0] = line[board.width - 1] = board.border;
+
+        std::copy(msg.begin(), msg.end(), line.begin() + board.startText);
+        return line;
+    }
 
     void FileOrganiser::createSmartMenu(){ // bool / menu depends from height and width
 
-        unsigned int startText = 4;  // index of first menu option (X axis)
 
         std::initializer_list<std::string> init{
             "1. Create directory.",
@@ -99,14 +136,11 @@ namespace FileManage{
             "7. Exit."
         };
 
-        auto makeOption([this, startText](std::string opt) -> std::optional<std::string>{
-            if(startText + opt.length() > board.width)
+        auto makeOption([this](std::string opt) -> std::optional<std::string>{
+            if(board.startText + opt.length() > board.width)
                 return std::nullopt;
 
-            std::string line(board.width,' ');
-            line[0] = line[board.width - 1] = board.border;
-
-            std::copy(opt.begin(), opt.end(), line.begin() + startText);
+            auto line = textLineCreator(opt);
 
 //            for (int i = startText, j = 0; i < startText + opt.length(); ++i, ++j) {
 //                line[i] = opt[j];
@@ -121,4 +155,9 @@ namespace FileManage{
         }
     }
 
+
+    FileOrganiser::~FileOrganiser() {
+        if(monitThread.joinable())
+            monitThread.join();
+    }
 }

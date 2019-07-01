@@ -16,6 +16,9 @@ int main() {
 
     manager.run();
 
+
+
+
     //filesystem::rename(main_dir/"marcin.jpg",main_dir/"1.jpg");
 
     return 0;

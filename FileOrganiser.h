@@ -8,6 +8,8 @@
 #include <algorithm>
 #include <list>
 #include <optional>
+#include <thread>
+#include <functional>
 
 using namespace std::experimental;
 
@@ -25,6 +27,7 @@ namespace FileManage{
             int sepBar = height <= 10 ? 0.9* height - 1 : 0.9 * height;
             char border = '#';
             int menuCorner = 3;
+            unsigned int startText = 4;
         };
 
     }
@@ -37,13 +40,13 @@ namespace FileManage{
     class FileOrganiser{
     public:
 
-        FileOrganiser(const fs::path& main_dir): origin_directory(main_dir),
+        FileOrganiser(const fs::path& main_dir): origin_directory(main_dir), notification(std::nullopt),
             monit(main_dir.string(), std::chrono::milliseconds(5000)), board{80,14} {
             createSmartMenu();
 
         }
-
         void run();
+
         template<typename T>
         void setFileNameIf(std::function<T()> const& pred); // or new menu to change options ...
         void changeSingleFileName();
@@ -53,9 +56,16 @@ namespace FileManage{
         void createDirectory(); // create and change for this dir
         void displayAllContainedExtensions();
         void startManager();    // main user-output                       2.
-        // protected:
+        void runFileMonitor(); // new thread + notify to change string with message
+        ~FileOrganiser();
+    protected:
         void drawMenu();        // method use to draw all menu elements   1.
+        void update();
     private:
+        void createSmartMenu();
+        std::string textLineCreator(const std::string& msg);
+        void showMessage();
+
         enum class Options{
             CreateDir = 1,
             ChangeDir,
@@ -66,14 +76,15 @@ namespace FileManage{
             Exit
         };
 
-        void showMessage();
-        Options curr_option;
-        bool ifRun = true;
-        void createSmartMenu();
-        std::list<std::string> menu;
-        filesystem::path origin_directory;
-        FileChecker monit;      // only for notify about newest changes (alert border)
-        Window::Display board;
+        bool                       fileMonitor = false;
+        bool                       ifRun = true;
+        Options                    curr_option;
+        std::optional<std::string> notification;
+        std::list<std::string>     menu;
+        filesystem::path           origin_directory;
+        FileChecker                monit;      // only for notify about newest changes (alert border)
+        std::thread                monitThread; // thread used to monit changes with FileChecker(launch only when fileMonitor is true)
+        Window::Display            board;
     };
 }
 

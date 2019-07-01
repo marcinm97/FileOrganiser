@@ -18,15 +18,16 @@ enum class State {Created, Modified, Removed};
 using namespace std::experimental;
 
 inline std::string stateToString(State type){
+    using namespace std::string_literals;
     switch(type){
         case State::Created:
-            return "File created: ";
+            return "File created: "s;
         case State::Modified:
-            return "File modified: ";
+            return "File modified: "s;
         case State::Removed:
-            return "File removed: ";
+            return "File removed: "s;
         default:
-            return "Unknown file status.\n";
+            return "Unknown file status.\n"s;
     }
 }
 
@@ -37,6 +38,7 @@ private:
     std::string main_path;
     std::optional<std::ofstream> alert_file;
     std::string fileToSave;
+    bool run = true;
     bool ifSave;
 
     bool contains(const std::string& file_name){
@@ -60,7 +62,7 @@ private:
 
             alert_file->close();
         }
-        catch(std::ostream::failure e){
+        catch(std::ostream::failure& e){
             std::cout << e.what();
             alert_file->close();
             alert_file.reset();
@@ -82,7 +84,7 @@ public:
 
     void startChecking(const std::function<void(const std::string&, State)>& validate){
 
-        while(true){                                                 // infinity loop
+        while(run){                                                 // infinity loop
             std::this_thread::sleep_for(delay_);                     // set refresh every "delay_" seconds
 
             for(auto it = paths_.begin(); it != paths_.end();){      // checking if one of the files was erased
