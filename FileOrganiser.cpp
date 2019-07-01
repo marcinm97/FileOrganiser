@@ -102,6 +102,7 @@ namespace FileManage{
             notification.emplace("START CHECKING...");
             update();
         }
+
         //auto& opt = notification;
         //std::function<void()> refresh = std::bind(&FileOrganiser::update, this);
         // avoid 'this' pointer in this lambda
@@ -111,6 +112,7 @@ namespace FileManage{
             auto msg = stateToString(type_of_change) + pth.filename().string();
             notification.emplace(msg);
             update();
+            std::this_thread::sleep_for(std::chrono::seconds(3)); // wait 3 seconds before showing next changes
         });
 
     }

@@ -21,7 +21,7 @@ inline std::string stateToString(State type){
     using namespace std::string_literals;
     switch(type){
         case State::Created:
-            return "File created: "s;
+            return "File created/added: "s;
         case State::Modified:
             return "File modified: "s;
         case State::Removed:
