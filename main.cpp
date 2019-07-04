@@ -16,11 +16,6 @@ int main() {
 
     manager.run();
 
-
-    //filesystem::space_info info = filesystem::space(main_dir);
-
-
-
     //filesystem::rename(main_dir/"marcin.txt", main_dir/"1.txt");
 
     return 0;

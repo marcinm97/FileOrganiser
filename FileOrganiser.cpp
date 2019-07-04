@@ -52,7 +52,7 @@ namespace FileManage{
         // 1. Iterate by all files
 
         for(auto& file: filesystem::directory_iterator(origin_directory)){
-                filesystem::rename(file.path(), origin_directory/(pred() + ".jpg"));
+                filesystem::rename(file.path(), origin_directory/(pred() + file.path().extension().string()));
 
         }
     }
@@ -175,17 +175,20 @@ namespace FileManage{
     void FileOrganiser::numberOfFiles() { //return size from map FileChecker(lib) / add method
         // find to search option in menu
         // for to check how mant files are there
-        auto it = menu.begin();
-        std::advance(it, 2);
+        using namespace std::string_literals;
 
-        std::string& w = *it;
+        auto curr_size = monit.getCurrentNumberOfFiles();
 
-        std::string test("COUNT: 1");
-        std::copy(test.begin(), test.end(), w.begin() + 23);
+        auto num_it = menu.begin();
+        std::advance(num_it, 2);
 
+        std::string& menu_option  = *num_it;
 
+        std::string counter = "DIR/FILES: "s + std::to_string(curr_size);
 
+        auto dot_idx = menu_option.find_last_of('.'); // position of last ' . ' (dot)
 
+        std::copy(counter.begin(), counter.end(), menu_option.begin() + dot_idx + 3);
     }
 
 

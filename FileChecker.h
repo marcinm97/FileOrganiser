@@ -82,6 +82,10 @@ public:
             paths_[f.path().string()] = filesystem::last_write_time(f);     // add path as a key, and time data as a value
     }
 
+    unsigned int getCurrentNumberOfFiles(){
+        return paths_.size();
+    }
+
     void startChecking(const std::function<void(const std::string&, State)>& validate){
 
         while(run){                                                 // infinity loop
