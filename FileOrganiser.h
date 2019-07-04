@@ -47,16 +47,13 @@ namespace FileManage{
         }
         void run();
 
-        template<typename T>
-        void setFileNameIf(std::function<T()> const& pred); // or new menu to change options ...
+        void setFileNameIf(std::function<std::string()> const& pred); // or new menu to change options ...
         void changeSingleFileName();
-        void changeDirectory();
-        void showAllContainedFiles();
+        void numberOfFiles();
         void addFiles();        // only message "Add your files to given directory ... "
-        void createDirectory(); // create and change for this dir
+        void createNewDirectory(); // create and change for this dir
         void displayAllContainedExtensions();
-        void startManager();    // main user-output                       2.
-        void runFileMonitor(); // new thread + notify to change string with message
+        void runFileMonitor();  // new thread + notify to change string with message
         ~FileOrganiser();
     protected:
         void drawMenu();        // method use to draw all menu elements   1.
@@ -86,6 +83,10 @@ namespace FileManage{
         std::thread                monitThread; // thread used to monit changes with FileChecker(launch only when fileMonitor is true)
         Window::Display            board;
     };
+
+
+
+
 }
 
 

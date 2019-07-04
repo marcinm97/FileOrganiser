@@ -16,13 +16,17 @@ namespace FileManage{
             switch(curr_option){
                 case Options::CreateDir:  // 1.
                     break;
-                case Options::ChangeDir:
+                case Options::ChangeDir:  // 2.
                     break;
-                case Options::DispFiles:
+                case Options::DispFiles:  // 3.
+                    numberOfFiles();
                     break;
-                case Options::AddFiles:
+                case Options::AddFiles:   // 4.
                     break;
-                case Options::Filenames:
+                case Options::Filenames:  // 5.
+                    setFileNameIf([count = 1]() mutable {    // < ----- temporary lambda to change filename
+                        return std::to_string(count++);
+                    });
                     break;
                 case Options::Monit:      // 6.
                     if(!fileMonitor){
@@ -40,6 +44,15 @@ namespace FileManage{
                     ifRun = false;
                     break;
             }
+
+        }
+    }
+
+    void FileOrganiser::setFileNameIf(std::function<std::string()> const& pred){  // pred should returns correct name
+        // 1. Iterate by all files
+
+        for(auto& file: filesystem::directory_iterator(origin_directory)){
+                filesystem::rename(file.path(), origin_directory/(pred() + ".jpg"));
 
         }
     }
@@ -133,10 +146,10 @@ namespace FileManage{
         std::initializer_list<std::string> init{
             "1. Create directory.",
             "2. Change directory.",
-            "3. Show files.",
-            "4. Add files.",
+            "3. Files number.",
+            "4. Remove files.",
             "5. Change filenames (types).",
-            "6. Turn On/Off file monitor.",
+            "6. Turn On/!Off file monitor.",
             "7. Exit."
         };
 
@@ -157,6 +170,22 @@ namespace FileManage{
                 menu.push_back(o.value());
             }
         }
+    }
+
+    void FileOrganiser::numberOfFiles() { //return size from map FileChecker(lib) / add method
+        // find to search option in menu
+        // for to check how mant files are there
+        auto it = menu.begin();
+        std::advance(it, 2);
+
+        std::string& w = *it;
+
+        std::string test("COUNT: 1");
+        std::copy(test.begin(), test.end(), w.begin() + 23);
+
+
+
+
     }
 
 
