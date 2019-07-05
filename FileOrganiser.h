@@ -53,12 +53,14 @@ namespace FileManage{
         void addFiles();        // only message "Add your files to given directory ... "
         void createNewDirectory(); // create and change for this dir
         void displayAllContainedExtensions();
+        void deleteAllContentedFiles();
         void runFileMonitor();  // new thread + notify to change string with message
         ~FileOrganiser();
     protected:
         void drawMenu();        // method use to draw all menu elements   1.
         void update();
     private:
+        void stopForSec(int sec);
         void createSmartMenu();
         std::string textLineCreator(const std::string& msg);
         void showMessage();
@@ -66,8 +68,8 @@ namespace FileManage{
         enum class Options{
             CreateDir = 1,
             ChangeDir,
-            DispFiles,
-            AddFiles,
+            NumbFiles,
+            DelFiles,
             Filenames,
             Monit,
             Exit

@@ -17,8 +17,5 @@ int main() {
     manager.run();
 
 
-
-    //filesystem::rename(main_dir/"mapa.png", main_dir/"1.png");
-
     return 0;
 }

@@ -86,6 +86,12 @@ public:
         return paths_.size();
     }
 
+    bool isEmptyPath(){
+        if(!paths_.empty())
+            return false;
+
+        return true;
+    }
     void startChecking(const std::function<void(const std::string&, State)>& validate){
 
         while(run){                                                 // infinity loop
@@ -93,7 +99,7 @@ public:
 
             for(auto it = paths_.begin(); it != paths_.end();){      // checking if one of the files was erased
                 auto [file, mod_data] = *it;
-
+                // TODO: if run is true
                 if(!filesystem::exists(file)){
                     validate(file, State::Removed);
                     if(ifSave)

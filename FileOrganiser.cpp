@@ -2,11 +2,13 @@
 
 namespace FileManage{
 
+    void FileOrganiser::stopForSec(int sec){
+        std::this_thread::sleep_for(std::chrono::seconds(sec));
+    }
 
     void FileOrganiser::run(){
 
         int temp;
-        int tmp;
 
         while(ifRun){
             update();
@@ -19,17 +21,15 @@ namespace FileManage{
                     break;
                 case Options::ChangeDir:  // 2.
                     break;
-                case Options::DispFiles:  // 3.
+                case Options::NumbFiles:  // 3.
                     numberOfFiles();
                     break;
-                case Options::AddFiles:   // 4.
+                case Options::DelFiles:  // 4.
+                    deleteAllContentedFiles();
                     break;
-                case Options::Filenames:  // 5.
-
-                std::cout<<"Press number space(first not 1): ";
-                std::cin>>tmp;
-                    setFileNameIf([&tmp]() mutable {    // < ----- temporary lambda to change filename
-                        return std::to_string(tmp++);
+                case Options::Filenames:  // 5.  // add vector with functionals or map
+                    setFileNameIf([count = 1]() mutable {    // < ----- temporary lambda to change filename
+                       return std::to_string(count++);
                     });
                     break;
                 case Options::Monit:      // 6.
@@ -39,8 +39,10 @@ namespace FileManage{
                     }
                     break;
                 case Options::Exit:
-                    if(fileMonitor)
+                    if(fileMonitor){
+                        fileMonitor = false;
                         monit.breakChecking();
+                    }
                     ifRun = false;
                     break;
                 default:
@@ -54,12 +56,15 @@ namespace FileManage{
 
     void FileOrganiser::setFileNameIf(std::function<std::string()> const& pred){  // pred should returns correct name
         // 1. Iterate by all files
+        std::vector<filesystem::path> _paths;
 
-        for(auto& file: filesystem::directory_iterator(origin_directory)){
+        for(auto file: filesystem::directory_iterator(origin_directory)){
             //if(auto s = (pred() + file.path().extension().string()); !filesystem::exists(s))  // if not exist
-                filesystem::rename(file.path(), origin_directory/(pred() + file.path().extension().string()));
-           // else
-              //  filesystem::rename(file.path(), origin_directory/(pred()+ "i" + file.path().extension().string()));
+            _paths.push_back(file.path());
+        }
+
+        for(const auto& f: _paths){
+            filesystem::rename(f,origin_directory/(pred() + f.extension().string()));
         }
     }
 
@@ -129,11 +134,10 @@ namespace FileManage{
         // avoid 'this' pointer in this lambda
         monitThread = std::thread(&FileChecker::startChecking,&monit,[this](const std::string& path_, State type_of_change){
             filesystem::path pth(path_);
-
             auto msg = stateToString(type_of_change) + pth.filename().string();
             notification.emplace(msg);
             update();
-            std::this_thread::sleep_for(std::chrono::seconds(3)); // wait 3 seconds before showing next changes
+            std::this_thread::sleep_for(std::chrono::seconds(1)); // wait 1 seconds before showing next changes
         });
 
     }
@@ -190,14 +194,30 @@ namespace FileManage{
 
         std::string& menu_option  = *num_it;
 
-        std::string counter = "DIR/FILES: "s + std::to_string(curr_size);
+        const std::string counter = "DIR/FILES -> "s + std::to_string(curr_size);
 
-        auto dot_idx = menu_option.find_last_of('.'); // position of last ' . ' (dot)
+        int dot_idx = menu_option.find_last_of(".:");
+
         menu_option[dot_idx] = ':';
 
         std::copy(counter.begin(), counter.end(), menu_option.begin() + dot_idx + 3);
     }
 
+    void FileOrganiser::deleteAllContentedFiles(){
+        if(monit.isEmptyPath()){
+            std::cout<<"Empty directory!\n";
+            stopForSec(2);
+            return;
+        }
+
+        bool state;
+
+        std::cout << "Are You sure (1 - Yes | 0 - No) ? ";
+        std::cin>>state;
+
+        if(state)
+            filesystem::remove_all(origin_directory);
+    }
 
     FileOrganiser::~FileOrganiser() {
         if(monitThread.joinable())
