@@ -27,7 +27,7 @@ namespace FileManage{
                 int tmp;
                 std::cout<<"Press number space(first not 1): ";
                 std::cin>>tmp;
-                    setFileNameIf([tmp]() mutable {    // < ----- temporary lambda to change filename
+                    setFileNameIf([&tmp]() mutable {    // < ----- temporary lambda to change filename
                         return std::to_string(tmp++);
                     });
                     break;
