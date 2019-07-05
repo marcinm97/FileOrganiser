@@ -16,7 +16,9 @@ int main() {
 
     manager.run();
 
-    //filesystem::rename(main_dir/"marcin.txt", main_dir/"1.txt");
+
+
+    //filesystem::rename(main_dir/"mapa.png", main_dir/"1.png");
 
     return 0;
 }

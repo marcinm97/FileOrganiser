@@ -24,8 +24,11 @@ namespace FileManage{
                 case Options::AddFiles:   // 4.
                     break;
                 case Options::Filenames:  // 5.
-                    setFileNameIf([count = 1]() mutable {    // < ----- temporary lambda to change filename
-                        return std::to_string(count++);
+                int tmp;
+                std::cout<<"Press number space(first not 1): ";
+                std::cin>>tmp;
+                    setFileNameIf([tmp]() mutable {    // < ----- temporary lambda to change filename
+                        return std::to_string(tmp++);
                     });
                     break;
                 case Options::Monit:      // 6.
@@ -52,8 +55,10 @@ namespace FileManage{
         // 1. Iterate by all files
 
         for(auto& file: filesystem::directory_iterator(origin_directory)){
+            //if(auto s = (pred() + file.path().extension().string()); !filesystem::exists(s))  // if not exist
                 filesystem::rename(file.path(), origin_directory/(pred() + file.path().extension().string()));
-
+           // else
+              //  filesystem::rename(file.path(), origin_directory/(pred()+ "i" + file.path().extension().string()));
         }
     }
 
@@ -187,6 +192,7 @@ namespace FileManage{
         std::string counter = "DIR/FILES: "s + std::to_string(curr_size);
 
         auto dot_idx = menu_option.find_last_of('.'); // position of last ' . ' (dot)
+        menu_option[dot_idx] = ':';
 
         std::copy(counter.begin(), counter.end(), menu_option.begin() + dot_idx + 3);
     }
