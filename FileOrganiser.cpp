@@ -6,6 +6,7 @@ namespace FileManage{
     void FileOrganiser::run(){
 
         int temp;
+        int tmp;
 
         while(ifRun){
             update();
@@ -24,7 +25,7 @@ namespace FileManage{
                 case Options::AddFiles:   // 4.
                     break;
                 case Options::Filenames:  // 5.
-                int tmp;
+
                 std::cout<<"Press number space(first not 1): ";
                 std::cin>>tmp;
                     setFileNameIf([&tmp]() mutable {    // < ----- temporary lambda to change filename
