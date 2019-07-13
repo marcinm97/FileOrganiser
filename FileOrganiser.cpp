@@ -24,7 +24,7 @@ namespace FileManage{
                 case Options::NumbFiles:  // 3.
                     numberOfFiles();
                     break;
-                case Options::DelFiles:  // 4.
+                case Options::DelFiles:  // 4.     // set permissions before removed
                     deleteAllContentedFiles();
                     break;
                 case Options::Filenames:  // 5.  // add vector with functionals or map
@@ -116,6 +116,7 @@ namespace FileManage{
                 std::cout<<"\n";
             }
         }
+
         std::cout << w;
 
         std::cout<<"\n->  YOUR CHOICE: ";
@@ -132,7 +133,7 @@ namespace FileManage{
         //auto& opt = notification;
         //std::function<void()> refresh = std::bind(&FileOrganiser::update, this);
         // avoid 'this' pointer in this lambda
-        monitThread = std::thread(&FileChecker::startChecking,&monit,[this](const std::string& path_, State type_of_change){
+        monitThread = std::thread(&FileChecker::startChecking,&monit,[this](const std::wstring& path_, State type_of_change){
             filesystem::path pth(path_);
             auto msg = stateToString(type_of_change) + pth.filename().string();
             notification.emplace(msg);

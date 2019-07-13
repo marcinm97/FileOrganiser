@@ -16,6 +16,5 @@ int main() {
 
     manager.run();
 
-
     return 0;
 }

@@ -10,6 +10,7 @@
 #include <optional>
 #include <thread>
 #include <functional>
+#include <fstream>
 
 using namespace std::experimental;
 
@@ -41,16 +42,19 @@ namespace FileManage{
     public:
 
         FileOrganiser(const fs::path& main_dir): origin_directory(main_dir), notification(std::nullopt),
-            monit(main_dir.string(), std::chrono::milliseconds(5000)), board{80,14} {
+            monit(main_dir.string(), std::chrono::milliseconds(5000)), data_buff(std::nullopt), board{80,14} {
             createSmartMenu();
 
         }
         void run();
 
         void setFileNameIf(std::function<std::string()> const& pred); // or new menu to change options ...
+        // TODO: ^ more options with predicate (maybe vector with functional?)
+        // TODO: ^ set a filename according to database (mysql), textfile (.txt/.csv/.json) - data
+        // TODO:   show contented extensions (monit method)
+        // TODO:
         void changeSingleFileName();
         void numberOfFiles();
-        void addFiles();        // only message "Add your files to given directory ... "
         void createNewDirectory(); // create and change for this dir
         void displayAllContainedExtensions();
         void deleteAllContentedFiles();
@@ -63,7 +67,7 @@ namespace FileManage{
         void stopForSec(int sec);
         void createSmartMenu();
         std::string textLineCreator(const std::string& msg);
-        void showMessage();
+
 
         enum class Options{
             CreateDir = 1,
@@ -77,6 +81,7 @@ namespace FileManage{
 
         bool                       fileMonitor = false;
         bool                       ifRun = true;
+        std::optional<std::ostream> data_buff;
         Options                    curr_option;
         std::optional<std::string> notification;
         std::list<std::string>     menu;
@@ -85,8 +90,6 @@ namespace FileManage{
         std::thread                monitThread; // thread used to monit changes with FileChecker(launch only when fileMonitor is true)
         Window::Display            board;
     };
-
-
 
 
 }

@@ -31,6 +31,8 @@ iterator
 -
 iostream
 -
+stack
+-
 
 C:/Users/Marcin/CLionProjects/FileOrganiser/FileOrganiser.cpp
 FileOrganiser.h
@@ -54,6 +56,8 @@ optional
 thread
 -
 functional
+-
+fstream
 -
 
 C:/Users/Marcin/CLionProjects/FileOrganiser/main.cpp

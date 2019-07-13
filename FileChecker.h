@@ -13,6 +13,7 @@
 #include <algorithm>
 #include <iterator>
 #include <iostream>
+#include <stack>
 
 enum class State {Created, Modified, Removed};
 using namespace std::experimental;
@@ -33,7 +34,8 @@ inline std::string stateToString(State type){
 
 class FileChecker{
 private:
-    std::unordered_map<std::string, filesystem::file_time_type> paths_;
+
+    std::unordered_map<std::wstring, filesystem::file_time_type> paths_;
     std::chrono::duration<int, std::milli> delay_;
     std::string main_path;
     std::optional<std::ofstream> alert_file;
@@ -41,7 +43,7 @@ private:
     bool run = true;
     bool ifSave;
 
-    bool contains(const std::string& file_name){
+    bool contains(const std::wstring& file_name){
         // return std::find_if(paths_.begin(), paths_.end(), [file_name](const auto& pair){
         // return pair.first == file_name;}) != paths_.end();
         return paths_.find(file_name) != paths_.end();
@@ -79,7 +81,7 @@ public:
         fileToSave = ifSave ? "changes.txt" : "";
 
         for(auto& f: filesystem::recursive_directory_iterator(main_path))
-            paths_[f.path().string()] = filesystem::last_write_time(f);     // add path as a key, and time data as a value
+            paths_[f.path().wstring()] = filesystem::last_write_time(f);     // add path as a key, and time data as a value
     }
 
     unsigned int getCurrentNumberOfFiles(){
@@ -92,27 +94,41 @@ public:
 
         return true;
     }
-    void startChecking(const std::function<void(const std::string&, State)>& validate){
+    void startChecking(const std::function<void(const std::wstring&, State)>& validate){
 
         while(run){                                                 // infinity loop
             std::this_thread::sleep_for(delay_);                     // set refresh every "delay_" seconds
 
             for(auto it = paths_.begin(); it != paths_.end();){      // checking if one of the files was erased
+
+                // TODO: turn off if run is false  file id
                 auto [file, mod_data] = *it;
-                // TODO: if run is true
-                if(!filesystem::exists(file)){
+
+                if(!filesystem::exists(file)){   // TODO: bug fix
                     validate(file, State::Removed);
                     if(ifSave)
                         saveToFile(fileToSave, std::make_tuple(file, time::to_time_t(mod_data), stateToString(State::Removed)));
 
                     paths_.erase(it++);
                 } else it++;
+
+                if(!run)
+                    it = paths_.end();
             }
 
+
+            //for(auto& file: filesystem::recursive_directory_iterator(main_path)){
             for(auto& file: filesystem::recursive_directory_iterator(main_path)){
+
+                // TODO: if statement with setting iterator, as upper
+//                if(!run)
+//                    it = filesystem::end(filesystem::recursive_directory_iterator(main_path));
+
+
                 auto lastWriteTime(filesystem::last_write_time(file));
 
-                if(auto s(file.path().string()); !contains(s)){     // check if file was created
+                if(auto s(file.path().wstring()); !contains(s)){     // check if file was created
+                    // TODO: validate new file (buffer(stack) probably)
                     paths_.insert({s,lastWriteTime});
 
                     if(ifSave)
@@ -123,7 +139,7 @@ public:
                     if(paths_[s] != lastWriteTime){
                         paths_[s] = lastWriteTime;
 
-                        if(auto p(filesystem::current_path()/fileToSave); ifSave && s != p.string())
+                        if(auto p(filesystem::current_path()/fileToSave); ifSave && s != p.wstring())
                             saveToFile(fileToSave, std::make_tuple(file.path().string(),time::to_time_t(lastWriteTime), stateToString(State::Modified)));
 
                         validate(s,State::Modified);
