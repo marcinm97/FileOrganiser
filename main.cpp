@@ -16,5 +16,7 @@ int main() {
 
     manager.run();
 
+    //manager.readDataFromFile();
+
     return 0;
 }

@@ -20,6 +20,9 @@ using namespace std::experimental;
 // 4. ...
 namespace FileManage{
 
+    static constexpr const char* dir_name  = "MonitFiles";
+    static constexpr const char* file_name = "filenamesList.txt";
+
     namespace Window{
 
         struct Display{
@@ -33,16 +36,13 @@ namespace FileManage{
 
     }
 
-
     namespace fs = filesystem;
-
-    static constexpr const char* dir_name = "MonitFiles";
 
     class FileOrganiser{
     public:
 
         FileOrganiser(const fs::path& main_dir): origin_directory(main_dir), notification(std::nullopt),
-            monit(main_dir.string(), std::chrono::milliseconds(5000)), data_buff(std::nullopt), board{80,14} {
+            monit(main_dir.string(), std::chrono::milliseconds(5000)), data_flow(std::nullopt), board{80,14} {
             createSmartMenu();
 
         }
@@ -52,11 +52,11 @@ namespace FileManage{
         // TODO: ^ more options with predicate (maybe vector with functional?)
         // TODO: ^ set a filename according to database (mysql), textfile (.txt/.csv/.json) - data
         // TODO:   show contented extensions (monit method)
-        // TODO:
+
         void changeSingleFileName();
-        void numberOfFiles();
-        void createNewDirectory(); // create and change for this dir
         void displayAllContainedExtensions();
+        void readDataFromFile(); // TODO: add last save of modification and add if statement
+        void numberOfFiles();
         void deleteAllContentedFiles();
         void runFileMonitor();  // new thread + notify to change string with message
         ~FileOrganiser();
@@ -71,27 +71,26 @@ namespace FileManage{
 
         enum class Options{
             CreateDir = 1,
-            ChangeDir,
             NumbFiles,
             DelFiles,
             Filenames,
+            SaveMonit,
             Monit,
             Exit
         };
 
-        bool                       fileMonitor = false;
-        bool                       ifRun = true;
-        std::optional<std::ostream> data_buff;
-        Options                    curr_option;
-        std::optional<std::string> notification;
-        std::list<std::string>     menu;
-        filesystem::path           origin_directory;
-        FileChecker                monit;      // only for notify about newest changes (alert border)
-        std::thread                monitThread; // thread used to monit changes with FileChecker(launch only when fileMonitor is true)
-        Window::Display            board;
+        bool                         fileMonitor = false;
+        bool                         ifRun = true;
+        Options                      curr_option;
+        std::optional<std::string>   notification;
+        std::optional<std::ifstream> data_flow;
+        std::list<std::string>       menu;
+        std::vector<std::string>     fileNameBuffer;
+        filesystem::path             origin_directory;
+        FileChecker                  monit;      // only for notify about newest changes (alert border)
+        std::thread                  monitThread; // thread used to monit changes with FileChecker(launch only when fileMonitor is true)
+        Window::Display              board;
     };
-
-
 }
 
 

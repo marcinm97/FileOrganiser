@@ -16,26 +16,38 @@ namespace FileManage{
             std::cin>>temp;
             curr_option = static_cast<Options>(temp);
 
+//                    "1. Create directory.",
+//                    "2. Files number.",
+//                    "3. Remove files.",
+//                    "4. Change filenames (types).",
+//                    "5. Save monit to file.",
+//                    "6. Turn On/!Off file monitor.",
+//                    "7. Exit."
+
             switch(curr_option){
                 case Options::CreateDir:  // 1.
                     break;
-                case Options::ChangeDir:  // 2.
-                    break;
-                case Options::NumbFiles:  // 3.
+                case Options::NumbFiles:  // 2.
                     numberOfFiles();
                     break;
-                case Options::DelFiles:  // 4.     // set permissions before removed
+                case Options::DelFiles:   // 3.
                     deleteAllContentedFiles();
                     break;
-                case Options::Filenames:  // 5.  // add vector with functionals or map
+                case Options::Filenames:  // 4.
                     setFileNameIf([count = 1]() mutable {    // < ----- temporary lambda to change filename
-                       return std::to_string(count++);
+                        return std::to_string(count++);
                     });
+                    break;
+                case Options::SaveMonit:  // 5.
+                    if(fileMonitor)
+                        monit.launchSaveToFile();
                     break;
                 case Options::Monit:      // 6.
                     if(!fileMonitor){
                         runFileMonitor();
                         fileMonitor = true;
+                    }else{
+                        // TODO: turn off service
                     }
                     break;
                 case Options::Exit:
@@ -55,6 +67,13 @@ namespace FileManage{
     }
 
     void FileOrganiser::setFileNameIf(std::function<std::string()> const& pred){  // pred should returns correct name
+
+        if(monit.isEmptyPath()){
+            std::cout<<"Empty directory!\n";
+            stopForSec(2);
+            return;
+        }
+
         // 1. Iterate by all files
         std::vector<filesystem::path> _paths;
 
@@ -153,13 +172,12 @@ namespace FileManage{
 
     void FileOrganiser::createSmartMenu(){ // bool / menu depends from height and width
 
-
         std::initializer_list<std::string> init{
             "1. Create directory.",
-            "2. Change directory.",
-            "3. Files number.",
-            "4. Remove files.",
-            "5. Change filenames (types).",
+            "2. Files number.",
+            "3. Remove files.",
+            "4. Change filenames (types).",
+            "5. Save monit log to file.",
             "6. Turn On/!Off file monitor.",
             "7. Exit."
         };
@@ -183,25 +201,29 @@ namespace FileManage{
         }
     }
 
-    void FileOrganiser::numberOfFiles() { //return size from map FileChecker(lib) / add method
-        // find to search option in menu
-        // for to check how mant files are there
+    void FileOrganiser::numberOfFiles() {
         using namespace std::string_literals;
 
         auto curr_size = monit.getCurrentNumberOfFiles();
 
         auto num_it = menu.begin();
-        std::advance(num_it, 2);
+        std::advance(num_it, 1);
 
+        std::string copy = *num_it;
         std::string& menu_option  = *num_it;
 
-        const std::string counter = "DIR/FILES -> "s + std::to_string(curr_size);
+
+        const std::string counter = "DIR/FILES - "s + std::to_string(curr_size);
 
         int dot_idx = menu_option.find_last_of(".:");
 
         menu_option[dot_idx] = ':';
-
         std::copy(counter.begin(), counter.end(), menu_option.begin() + dot_idx + 3);
+
+        update();
+
+        stopForSec(3);
+        *num_it = copy;
     }
 
     void FileOrganiser::deleteAllContentedFiles(){
@@ -213,11 +235,64 @@ namespace FileManage{
 
         bool state;
 
-        std::cout << "Are You sure (1 - Yes | 0 - No) ? ";
+        std::cout << "Are You sure (1 - Yes | 0 - No) ?  ";
         std::cin>>state;
 
-        if(state)
-            filesystem::remove_all(origin_directory);
+        try {
+            if (state) {
+                //filesystem::remove_all(origin_directory);
+                for (const auto &rem: filesystem::directory_iterator(origin_directory)) {
+                    filesystem::remove(rem.path());  // except
+                }
+            }
+        }
+        catch(filesystem::filesystem_error& e){
+            std::cout << e.what() << "\n";
+        }
+    }
+
+    void FileOrganiser::readDataFromFile() {  // involve only if lastModification was changed
+
+        using namespace std::string_literals;
+
+        std::string name = (origin_directory/file_name).string();
+
+        try{
+            if(!filesystem::exists(name))
+                throw "EXCEPTION: File not exist"s;
+
+            if(!data_flow){
+                data_flow.emplace(name);
+            }else{
+                data_flow->open(name);
+            }
+
+            std::string temp;
+
+            if(!fileNameBuffer.empty())
+                fileNameBuffer.clear();
+
+            if(data_flow->is_open()){
+                while(!data_flow->eof()){
+                    std::getline(*data_flow, temp);
+                    fileNameBuffer.emplace_back(temp);
+                }
+
+                for(const auto& f: fileNameBuffer)
+                    std::cout<<f<<"\n";
+            }
+
+            data_flow->close();
+        }
+        catch(std::ifstream::failure& f){
+            std::cout << f.what() << "\n";
+        }
+        catch(filesystem::filesystem_error& e){
+            std::cout << e.what() << "\n";
+        }
+        catch(const std::string& s){
+            std::cout << s << "\n";
+        }
     }
 
     FileOrganiser::~FileOrganiser() {

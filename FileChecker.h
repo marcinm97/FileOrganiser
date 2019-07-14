@@ -94,6 +94,12 @@ public:
 
         return true;
     }
+
+    void launchSaveToFile(){
+        if(!ifSave)
+            ifSave = true;
+    }
+
     void startChecking(const std::function<void(const std::wstring&, State)>& validate){
 
         while(run){                                                 // infinity loop
