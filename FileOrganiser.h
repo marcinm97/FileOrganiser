@@ -47,7 +47,7 @@ namespace FileManage{
 
         }
         void run();
-
+        bool isEmptyDirectory();
         void setFileNameIf(std::function<std::string()> const& pred); // or new menu to change options ...
         // TODO: ^ more options with predicate (maybe vector with functional?)
         // TODO: ^ set a filename according to database (mysql), textfile (.txt/.csv/.json) - data
@@ -59,8 +59,10 @@ namespace FileManage{
         void numberOfFiles();
         void deleteAllContentedFiles();
         void runFileMonitor();  // new thread + notify to change string with message
+
         ~FileOrganiser();
     protected:
+        void fileChangesSubMenu();
         void drawMenu();        // method use to draw all menu elements   1.
         void update();
     private:

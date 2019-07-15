@@ -27,20 +27,21 @@ namespace FileManage{
             switch(curr_option){
                 case Options::CreateDir:  // 1.
                     break;
-                case Options::NumbFiles:  // 2.
+                case Options::NumbFiles:  // 2.   ~
                     numberOfFiles();
                     break;
-                case Options::DelFiles:   // 3.
+                case Options::DelFiles:   // 3.   ~
                     deleteAllContentedFiles();
                     break;
-                case Options::Filenames:  // 4.
-                    setFileNameIf([count = 1]() mutable {    // < ----- temporary lambda to change filename
-                        return std::to_string(count++);
-                    });
+                case Options::Filenames:  // 4.   ~
+                    fileChangesSubMenu();
+//                    setFileNameIf([count = 1]() mutable {    // < ----- temporary lambda to change filename
+//                        return std::to_string(count++);
+//                    });
                     break;
-                case Options::SaveMonit:  // 5.
+                case Options::SaveMonit:  // 5.    // (after launch) all changes available in cmake file
                     if(fileMonitor)
-                        monit.launchSaveToFile();
+                        monit.launchSaveToFile();  // TODO: add info about success
                     break;
                 case Options::Monit:      // 6.
                     if(!fileMonitor){
@@ -90,6 +91,49 @@ namespace FileManage{
     void FileOrganiser::update(){
         system("cls");
         drawMenu();
+    }
+
+    bool FileOrganiser::isEmptyDirectory() {
+
+        // monit.isEmptyPatch() - all the time available but if user create file
+        // during the program launching we don't have this file in monitor
+
+        if (fileMonitor)
+            return monit.isEmptyPath();
+
+        std::cout << "Can I launch fileMonitor (1 - Yes | 0 - No) ? : ";
+        bool state;
+
+        std::cin >> state;
+
+        if(state) {
+            runFileMonitor();
+            fileMonitor = true;
+            std::cout<<"\n";
+            return monit.isEmptyPath();
+        }else{
+            std::cout<<"\nYou don't use fileMonitor. Information may be incorrect!\n";
+            return monit.isEmptyPath();
+        }
+    }
+
+    void FileOrganiser::fileChangesSubMenu() {
+        if(this->isEmptyDirectory()) {
+            std::cout << "Empty directory!\n";
+            stopForSec(3);
+            return;
+        }
+
+        int temp;
+        auto subUpdate([]() -> void {
+            std::cout << "Change type of action: \n";
+            std::cout << "1. According to file (if accesible).\n";
+            std::cout << "2. Numbers sequence (1 .. 2 .. 3 ..)\n";
+
+        });
+        //while(std::cin>>temp)
+
+
     }
 
     void FileOrganiser::drawMenu(){
@@ -202,6 +246,13 @@ namespace FileManage{
     }
 
     void FileOrganiser::numberOfFiles() {
+
+        if(this->isEmptyDirectory()){
+            std::cout<<"Empty directory!\n";
+            stopForSec(2);
+            return;
+        }
+
         using namespace std::string_literals;
 
         auto curr_size = monit.getCurrentNumberOfFiles();
@@ -227,7 +278,8 @@ namespace FileManage{
     }
 
     void FileOrganiser::deleteAllContentedFiles(){
-        if(monit.isEmptyPath()){
+
+        if(this->isEmptyDirectory()){
             std::cout<<"Empty directory!\n";
             stopForSec(2);
             return;
@@ -240,9 +292,8 @@ namespace FileManage{
 
         try {
             if (state) {
-                //filesystem::remove_all(origin_directory);
                 for (const auto &rem: filesystem::directory_iterator(origin_directory)) {
-                    filesystem::remove(rem.path());  // except
+                    filesystem::remove(rem.path());
                 }
             }
         }

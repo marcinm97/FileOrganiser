@@ -96,8 +96,10 @@ public:
     }
 
     void launchSaveToFile(){
-        if(!ifSave)
+        if(!ifSave){
+            fileToSave = "changes.txt";
             ifSave = true;
+        }
     }
 
     void startChecking(const std::function<void(const std::wstring&, State)>& validate){
