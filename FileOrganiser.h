@@ -55,7 +55,7 @@ namespace FileManage{
 
         void changeSingleFileName();
         void displayAllContainedExtensions();
-        void readDataFromFile(); // TODO: add last save of modification and add if statement
+        bool readDataFromFile(); // TODO: add last save of modification and add if statement
         void numberOfFiles();
         void deleteAllContentedFiles();
         void runFileMonitor();  // new thread + notify to change string with message
@@ -84,6 +84,7 @@ namespace FileManage{
         bool                         fileMonitor = false;
         bool                         ifRun = true;
         Options                      curr_option;
+        filesystem::file_time_type   lastFileMod;
         std::optional<std::string>   notification;
         std::optional<std::ifstream> data_flow;
         std::list<std::string>       menu;

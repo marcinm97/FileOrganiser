@@ -40,8 +40,14 @@ namespace FileManage{
 //                    });
                     break;
                 case Options::SaveMonit:  // 5.    // (after launch) all changes available in cmake file
-                    if(fileMonitor)
-                        monit.launchSaveToFile();  // TODO: add info about success
+                    if(fileMonitor){
+                        monit.launchSaveToFile();
+                        std::cout<<"\nLaunch successed!\n";
+                        stopForSec(2);
+                    }else{
+                        std::cout<<"\nfileMonitor wasn't run yet!\n";
+                        stopForSec(2);
+                    }
                     break;
                 case Options::Monit:      // 6.
                     if(!fileMonitor){
@@ -68,13 +74,6 @@ namespace FileManage{
     }
 
     void FileOrganiser::setFileNameIf(std::function<std::string()> const& pred){  // pred should returns correct name
-
-        if(monit.isEmptyPath()){
-            std::cout<<"Empty directory!\n";
-            stopForSec(2);
-            return;
-        }
-
         // 1. Iterate by all files
         std::vector<filesystem::path> _paths;
 
@@ -112,34 +111,65 @@ namespace FileManage{
             std::cout<<"\n";
             return monit.isEmptyPath();
         }else{
-            std::cout<<"\nYou don't use fileMonitor. Information may be incorrect!\n";
+            std::cout<<"\nINFO: You don't use fileMonitor. Information may be incorrect!\n";
+            stopForSec(2);
             return monit.isEmptyPath();
         }
     }
 
     void FileOrganiser::fileChangesSubMenu() {
         if(this->isEmptyDirectory()) {
-            std::cout << "Empty directory!\n";
+            std::cout << "INFO: Empty directory!\n";
             stopForSec(3);
             return;
         }
 
-        int temp;
-        auto subUpdate([]() -> void {
-            std::cout << "Change type of action: \n";
+        bool check = true;
+        enum class Action: unsigned int {FILE = 1, SEQUENCE, EXIT };
+        Action type;
+
+        auto subUpdate([&type]() -> void {
+            system("cls");
+            int temp;
+            std::cout << "Change type of action: \n\n";
             std::cout << "1. According to file (if accesible).\n";
             std::cout << "2. Numbers sequence (1 .. 2 .. 3 ..)\n";
+            std::cout<<  "3. Exit.\n";
+            std::cout<<"\n->  YOUR CHOICE: ";
+            std::cin >> temp;
 
+            type = static_cast<Action>(temp);
         });
-        //while(std::cin>>temp)
 
 
+        do{
+            subUpdate();
+
+            // TODO: add lambdas with action (file and normal sequence - service)
+            switch(type){
+                case Action::FILE:
+                    if(readDataFromFile()){
+                        //setFileNameIf(...);
+                    }
+                    std::cout<<"FILE\n";
+                    stopForSec(2);
+                    break;
+                case Action::SEQUENCE:
+                    setFileNameIf([count = 0]() mutable -> std::string{ return std::to_string(count++); });
+                    std::cout<<"SEQUENCE\n";
+                    break;
+                case Action::EXIT:
+                    check = false;
+                    break;
+                default:
+                    std::cout<<"INFO: Undefined action\n";
+                    stopForSec(2);
+                    check = false;
+            }
+        }while(check);
     }
 
     void FileOrganiser::drawMenu(){
-        // draw area
-        // if update is accessible - do it
-
 
         auto mainMenu = menu;
 
@@ -248,7 +278,7 @@ namespace FileManage{
     void FileOrganiser::numberOfFiles() {
 
         if(this->isEmptyDirectory()){
-            std::cout<<"Empty directory!\n";
+            std::cout<<"INFO: Empty directory!\n";
             stopForSec(2);
             return;
         }
@@ -280,7 +310,7 @@ namespace FileManage{
     void FileOrganiser::deleteAllContentedFiles(){
 
         if(this->isEmptyDirectory()){
-            std::cout<<"Empty directory!\n";
+            std::cout<<"INFO: Empty directory!\n";
             stopForSec(2);
             return;
         }
@@ -302,15 +332,21 @@ namespace FileManage{
         }
     }
 
-    void FileOrganiser::readDataFromFile() {  // involve only if lastModification was changed
+    bool FileOrganiser::readDataFromFile() {  // involve only if lastModification was changed
 
         using namespace std::string_literals;
 
-        std::string name = (origin_directory/file_name).string();
+        std::string name = (filesystem::current_path()/file_name).string();    // file should be given in cmaake directory
 
         try{
             if(!filesystem::exists(name))
-                throw "EXCEPTION: File not exist"s;
+                throw "\nEXCEPTION: File not exist"s;
+
+            if(filesystem::last_write_time(name) == lastFileMod){
+                std::cout<<"\nINFO: You have the newest version of data!\n";
+                stopForSec(2);
+                return true;
+            }
 
             if(!data_flow){
                 data_flow.emplace(name);
@@ -331,19 +367,29 @@ namespace FileManage{
 
                 for(const auto& f: fileNameBuffer)
                     std::cout<<f<<"\n";
+
+
+                std::cout<<"\n\nSuccess Processing ... \n";
+                stopForSec(3);
             }
+            lastFileMod = filesystem::last_write_time(name);
 
             data_flow->close();
         }
         catch(std::ifstream::failure& f){
             std::cout << f.what() << "\n";
+            return false;
         }
         catch(filesystem::filesystem_error& e){
             std::cout << e.what() << "\n";
+            return false;
         }
         catch(const std::string& s){
             std::cout << s << "\n";
+            return false;
         }
+
+        return true;
     }
 
     FileOrganiser::~FileOrganiser() {

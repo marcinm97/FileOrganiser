@@ -136,7 +136,6 @@ public:
                 auto lastWriteTime(filesystem::last_write_time(file));
 
                 if(auto s(file.path().wstring()); !contains(s)){     // check if file was created
-                    // TODO: validate new file (buffer(stack) probably)
                     paths_.insert({s,lastWriteTime});
 
                     if(ifSave)
