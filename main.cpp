@@ -16,5 +16,7 @@ int main() {
 
     manager.run();
 
+    //manager.showContentedFiles();
+
     return 0;
 }

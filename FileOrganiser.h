@@ -55,9 +55,10 @@ namespace FileManage{
         void displayAllContainedExtensions();
         void numberOfFiles();
         void deleteAllContentedFiles();
-        void runFileMonitor();  // new thread + notify to change string with message
+        void showContentedFiles();
         ~FileOrganiser();
     protected:
+        void runFileMonitor();  // new thread + notify to change string with message
         bool readDataFromFile();
         void fileChangesSubMenu();
         void drawMenu();        // method use to draw all menu elements
@@ -69,7 +70,7 @@ namespace FileManage{
 
 
         enum class Options{
-            CreateDir = 1,
+            ShowFiles = 1,
             NumbFiles,
             DelFiles,
             Filenames,

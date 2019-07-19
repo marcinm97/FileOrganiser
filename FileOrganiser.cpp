@@ -39,7 +39,7 @@ namespace FileManage{
             std::cin>>temp;
             curr_option = static_cast<Options>(temp);
 
-//                    "1. Create directory.",
+//                    "1. Show Files.",
 //                    "2. Files number.",
 //                    "3. Remove files.",
 //                    "4. Change filenames (types).",
@@ -48,7 +48,8 @@ namespace FileManage{
 //                    "7. Exit."
 
             switch(curr_option){
-                case Options::CreateDir:  // 1.
+                case Options::ShowFiles:  // 1.
+                    showContentedFiles();
                     break;
                 case Options::NumbFiles:  // 2.   ~
                     numberOfFiles();
@@ -75,7 +76,6 @@ namespace FileManage{
                 case Options::Monit:      // 6.
                     if(!fileMonitor){
                         runFileMonitor();
-                        fileMonitor = true;
                     }else{
                         // TODO: turn off service
                     }
@@ -94,6 +94,23 @@ namespace FileManage{
             }
 
         }
+    }
+
+    void FileOrganiser::showContentedFiles() {
+        if(this->isEmptyDirectory()) {
+            std::cout << "INFO: Empty directory!\n";
+            stopForSec(3);
+            return;
+        }
+
+        std::cout<<"\n";
+
+        for(auto&& f: monit.getListOfCurrentFiles()){
+            int idx = f.find_last_of('\\');
+            //std::wcout<<f<<"\n";
+            std::wcout << f.substr(idx++, f.size())<<"\n";
+        }
+        stopForSec(5);
     }
 
     void FileOrganiser::setFileNameIf(std::function<std::string()> const& pred){  // pred should returns correct name
@@ -133,7 +150,6 @@ namespace FileManage{
 
         if(state) {
             runFileMonitor();
-            fileMonitor = true;
             std::cout<<"\n";
             return monit.isEmptyPath();
         }else{
@@ -287,6 +303,7 @@ namespace FileManage{
             std::this_thread::sleep_for(std::chrono::seconds(1)); // wait 1 seconds before showing next changes
         });
 
+        fileMonitor = true;
     }
 
     std::string FileOrganiser::textLineCreator(const std::string& msg){
@@ -300,7 +317,7 @@ namespace FileManage{
     void FileOrganiser::createSmartMenu(){ // bool / menu depends from height and width
 
         std::initializer_list<std::string> init{
-            "1. Create directory.",
+            "1. Show all files.",
             "2. Files number.",
             "3. Remove files.",
             "4. Change filenames (types).",

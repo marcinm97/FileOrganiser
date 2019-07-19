@@ -14,6 +14,7 @@
 #include <iterator>
 #include <iostream>
 #include <stack>
+#include <list>
 
 enum class State {Created, Modified, Removed};
 using namespace std::experimental;
@@ -100,6 +101,16 @@ public:
             fileToSave = "changes.txt";
             ifSave = true;
         }
+    }
+
+    std::list<std::wstring> getListOfCurrentFiles(){
+        std::list<std::wstring> files_;
+        auto seper([](auto pair){return pair.first;});
+
+        std::transform(paths_.begin(), paths_.end(), std::inserter(files_, files_.begin()),seper);
+        //std::copy(paths_.begin(), paths_.end(), std::inserter(files_, files_.begin()));
+
+        return files_;
     }
 
     void startChecking(const std::function<void(const std::wstring&, State)>& validate){
