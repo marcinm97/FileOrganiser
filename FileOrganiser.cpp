@@ -175,14 +175,15 @@ namespace FileManage{
                 case Action::FILE:
                     if(readDataFromFile()){
                         auto vect = fileNameBuffer;
-                        setFileNameIf([&vect]() -> std::string {
+                        setFileNameIf([&vect, count = 1]() mutable -> std::string {
+
                             std::string tmp;
                             if(!vect.empty()){
                                 tmp = *vect.begin();  //vect.back();
                                 vect.erase(vect.begin());
                                 //vect.pop_back();
                             }else
-                                tmp = "no_name";
+                                tmp = "no_name" + std::to_string(count++);     // protection before name conflict
 
                             return tmp;});
                     }

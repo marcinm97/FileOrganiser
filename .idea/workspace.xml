@@ -13,16 +13,7 @@
   <component name="ChangeListManager">
     <list default="true" id="b7a5f036-caf5-4ece-b2ed-f88ec972637f" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FileChecker.h" beforeDir="false" afterPath="$PROJECT_DIR$/FileChecker.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/FileOrganiser.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/FileOrganiser.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FileOrganiser.h" beforeDir="false" afterPath="$PROJECT_DIR$/FileOrganiser.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MonitFiles/Nowy dokument tekstowy.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/MonitFiles/test.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/FileOrganiser.dir/FileOrganiser.cpp.obj" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/FileOrganiser.dir/FileOrganiser.cpp.obj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/FileOrganiser.dir/main.cpp.obj" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/FileOrganiser.dir/main.cpp.obj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/FileOrganiser.dir/objects.a" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/FileOrganiser.dir/objects.a" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/FileOrganiser.exe" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/FileOrganiser.exe" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/main.cpp" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/cmake-build-debug/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -55,20 +46,20 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/FileOrganiser.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-1207">
-              <caret line="172" selection-start-line="172" selection-end-line="172" />
+            <state relative-caret-position="238">
+              <caret line="185" column="82" selection-start-line="185" selection-start-column="82" selection-end-line="185" selection-end-column="82" />
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/FileOrganiser.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="170">
-              <caret line="19" column="9" lean-forward="true" selection-start-line="19" selection-start-column="9" selection-end-line="19" selection-end-column="9" />
+            <state relative-caret-position="506">
+              <caret line="94" selection-start-line="94" selection-end-line="94" />
               <folding>
                 <element signature="e#77#179#0" expanded="true" />
               </folding>
@@ -79,7 +70,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/FileChecker.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1027">
+            <state relative-caret-position="408">
               <caret line="138" column="48" selection-start-line="138" selection-start-column="48" selection-end-line="138" selection-end-column="48" />
               <folding>
                 <element signature="e#69#103#0" expanded="true" />
@@ -105,9 +96,9 @@
       <list>
         <option value="$PROJECT_DIR$/CMakeLists.txt" />
         <option value="$PROJECT_DIR$/FileChecker.h" />
+        <option value="$PROJECT_DIR$/FileOrganiser.h" />
         <option value="$PROJECT_DIR$/main.cpp" />
         <option value="$PROJECT_DIR$/FileOrganiser.cpp" />
-        <option value="$PROJECT_DIR$/FileOrganiser.h" />
       </list>
     </option>
   </component>
@@ -205,12 +196,12 @@
       <workItem from="1563267235908" duration="9760000" />
       <workItem from="1563352338063" duration="10107000" />
       <workItem from="1563440262984" duration="15728000" />
-      <workItem from="1563524293486" duration="10446000" />
+      <workItem from="1563524293486" duration="11754000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="301783000" />
+    <option name="totallyTimeSpent" value="303091000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -310,9 +301,19 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/FileOrganiser.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="506">
+          <caret line="94" selection-start-line="94" selection-end-line="94" />
+          <folding>
+            <element signature="e#77#179#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/FileChecker.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1027">
+        <state relative-caret-position="408">
           <caret line="138" column="48" selection-start-line="138" selection-start-column="48" selection-end-line="138" selection-end-column="48" />
           <folding>
             <element signature="e#69#103#0" expanded="true" />
@@ -332,18 +333,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/FileOrganiser.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1207">
-          <caret line="172" selection-start-line="172" selection-end-line="172" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/FileOrganiser.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="170">
-          <caret line="19" column="9" lean-forward="true" selection-start-line="19" selection-start-column="9" selection-end-line="19" selection-end-column="9" />
-          <folding>
-            <element signature="e#77#179#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="238">
+          <caret line="185" column="82" selection-start-line="185" selection-start-column="82" selection-end-line="185" selection-end-column="82" />
         </state>
       </provider>
     </entry>
