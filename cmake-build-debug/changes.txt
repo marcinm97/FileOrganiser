@@ -1,0 +1,38 @@
+ +  File removed: 	"C:\\Users\\Marcin\\CLionProjects\\FileOrganiser\\MonitFiles\\5.txt"	Thu Jul 18 00:09:29 2019
+
+ +  File removed: 	"C:\\Users\\Marcin\\CLionProjects\\FileOrganiser\\MonitFiles\\4.pub"	Thu Jul 18 18:27:24 2019
+
+ +  File removed: 	"C:\\Users\\Marcin\\CLionProjects\\FileOrganiser\\MonitFiles\\3.xlsx"	Thu Jul 18 20:44:22 2019
+
+ +  File removed: 	"C:\\Users\\Marcin\\CLionProjects\\FileOrganiser\\MonitFiles\\1.pptx"	Thu Jul 18 22:00:09 2019
+
+ +  File removed: 	"C:\\Users\\Marcin\\CLionProjects\\FileOrganiser\\MonitFiles\\2.txt"	Wed Jul 17 19:46:44 2019
+
+ +  File created/added: 	"C:\\Users\\Marcin\\CLionProjects\\FileOrganiser\\MonitFiles\\Dawid_Karpinski.txt"	Thu Jul 18 00:09:29 2019
+
+ +  File created/added: 	"C:\\Users\\Marcin\\CLionProjects\\FileOrganiser\\MonitFiles\\Dawid_Nowicki.pub"	Thu Jul 18 18:27:24 2019
+
+ +  File created/added: 	"C:\\Users\\Marcin\\CLionProjects\\FileOrganiser\\MonitFiles\\Marcin_Mucha.pptx"	Thu Jul 18 22:00:09 2019
+
+ +  File created/added: 	"C:\\Users\\Marcin\\CLionProjects\\FileOrganiser\\MonitFiles\\Michal_Dudziak.xlsx"	Thu Jul 18 20:44:22 2019
+
+ +  File created/added: 	"C:\\Users\\Marcin\\CLionProjects\\FileOrganiser\\MonitFiles\\Szczepan_Malaga.txt"	Wed Jul 17 19:46:44 2019
+
+ +  File removed: 	"C:\\Users\\Marcin\\CLionProjects\\FileOrganiser\\MonitFiles\\Szczepan_Malaga.txt"	Wed Jul 17 19:46:44 2019
+
+ +  File removed: 	"C:\\Users\\Marcin\\CLionProjects\\FileOrganiser\\MonitFiles\\Marcin_Mucha.pptx"	Thu Jul 18 22:00:09 2019
+
+ +  File removed: 	"C:\\Users\\Marcin\\CLionProjects\\FileOrganiser\\MonitFiles\\Michal_Dudziak.xlsx"	Thu Jul 18 20:44:22 2019
+
+ +  File removed: 	"C:\\Users\\Marcin\\CLionProjects\\FileOrganiser\\MonitFiles\\Dawid_Nowicki.pub"	Thu Jul 18 18:27:24 2019
+
+ +  File modified: 	"C:\\Users\\Marcin\\CLionProjects\\FileOrganiser\\MonitFiles\\Dawid_Karpinski.txt"	Wed Jul 17 19:46:44 2019
+
+ +  File created/added: 	"C:\\Users\\Marcin\\CLionProjects\\FileOrganiser\\MonitFiles\\Dawid_Nowicki.xlsx"	Thu Jul 18 20:44:22 2019
+
+ +  File created/added: 	"C:\\Users\\Marcin\\CLionProjects\\FileOrganiser\\MonitFiles\\Marcin_Mucha.txt"	Thu Jul 18 00:09:29 2019
+
+ +  File created/added: 	"C:\\Users\\Marcin\\CLionProjects\\FileOrganiser\\MonitFiles\\Michal_Dudziak.pptx"	Thu Jul 18 22:00:09 2019
+
+ +  File created/added: 	"C:\\Users\\Marcin\\CLionProjects\\FileOrganiser\\MonitFiles\\Szczepan_Malaga.pub"	Thu Jul 18 18:27:24 2019
+

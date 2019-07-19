@@ -112,7 +112,7 @@ public:
                 // TODO: turn off if run is false  file id
                 auto [file, mod_data] = *it;
 
-                if(!filesystem::exists(file)){   // TODO: bug fix
+                if(!filesystem::exists(file)){
                     validate(file, State::Removed);
                     if(ifSave)
                         saveToFile(fileToSave, std::make_tuple(file, time::to_time_t(mod_data), stateToString(State::Removed)));

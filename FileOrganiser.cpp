@@ -2,6 +2,29 @@
 
 namespace FileManage{
 
+    namespace TextValid{
+        std::string createFilename(const std::string& file_name){
+            auto dot = file_name.find_first_of(".");
+            if(file_name[dot + 1] == ' ')
+                dot += 2;
+            else
+                ++dot;
+
+            std::string readyfname = file_name.substr(dot, file_name.size());
+
+            std::replace(readyfname.begin(), readyfname.end(), ' ', '_');
+
+            //std::transform(file_name.begin() + ++dot, file_name.end(), std::inserter(readyfname, readyfname.begin()), [](auto c){return std::tolower(c);});
+
+            //readyfname.erase(std::remove(readyfname.begin(), readyfname.end(),' '));
+
+
+            // tolower | remove space
+
+            return readyfname;
+        }
+    }
+
     void FileOrganiser::stopForSec(int sec){
         std::this_thread::sleep_for(std::chrono::seconds(sec));
     }
@@ -45,7 +68,7 @@ namespace FileManage{
                         std::cout<<"\nLaunch successed!\n";
                         stopForSec(2);
                     }else{
-                        std::cout<<"\nfileMonitor wasn't run yet!\n";
+                        std::cout<<"\nfileMonitor hasn't run yet!\n";
                         stopForSec(2);
                     }
                     break;
@@ -65,8 +88,8 @@ namespace FileManage{
                     ifRun = false;
                     break;
                 default:
-                    std::cout<<"Blad";
-                    ifRun = false;
+                    std::cout<<"INFO: Undefined action\n";
+                    stopForSec(2);
                     break;
             }
 
@@ -81,9 +104,12 @@ namespace FileManage{
             //if(auto s = (pred() + file.path().extension().string()); !filesystem::exists(s))  // if not exist
             _paths.push_back(file.path());
         }
-
-        for(const auto& f: _paths){
-            filesystem::rename(f,origin_directory/(pred() + f.extension().string()));
+        try{
+            for(const auto& f: _paths){
+                filesystem::rename(f, origin_directory/(pred() + f.extension().string()));
+            }
+        }catch(filesystem::filesystem_error& e){
+            std::cout << e.what() << "\n";
         }
     }
 
@@ -145,18 +171,29 @@ namespace FileManage{
         do{
             subUpdate();
 
-            // TODO: add lambdas with action (file and normal sequence - service)
             switch(type){
                 case Action::FILE:
                     if(readDataFromFile()){
-                        //setFileNameIf(...);
+                        auto vect = fileNameBuffer;
+                        setFileNameIf([&vect]() -> std::string {
+                            std::string tmp;
+                            if(!vect.empty()){
+                                tmp = *vect.begin();  //vect.back();
+                                vect.erase(vect.begin());
+                                //vect.pop_back();
+                            }else
+                                tmp = "no_name";
+
+                            return tmp;});
                     }
+                    displayAllContainedExtensions();
                     std::cout<<"FILE\n";
                     stopForSec(2);
                     break;
                 case Action::SEQUENCE:
-                    setFileNameIf([count = 0]() mutable -> std::string{ return std::to_string(count++); });
-                    std::cout<<"SEQUENCE\n";
+                    setFileNameIf([count = 1]() mutable -> std::string{ return std::to_string(count++); });
+                    std::cout<<"Successed!\n";
+                    stopForSec(2);
                     break;
                 case Action::EXIT:
                     check = false;
@@ -164,7 +201,7 @@ namespace FileManage{
                 default:
                     std::cout<<"INFO: Undefined action\n";
                     stopForSec(2);
-                    check = false;
+                    break;
             }
         }while(check);
     }
@@ -216,6 +253,18 @@ namespace FileManage{
 
     }
 
+    void FileOrganiser::displayAllContainedExtensions() {
+        if(this->isEmptyDirectory()) {
+            std::cout << "INFO: Empty directory!\n";
+            stopForSec(3);
+            return;
+        }
+
+        auto set = monit.getSetOfExtensions();
+        std::cout<<"\nContented extensions:\n";
+        std::copy(set.begin(), set.end(), std::ostream_iterator<std::string>(std::cout, "\n"));
+    }
+
     void FileOrganiser::runFileMonitor(){         // FILE MONITOR (OTHER THREAD)
 
         if(!notification){
@@ -230,7 +279,10 @@ namespace FileManage{
             filesystem::path pth(path_);
             auto msg = stateToString(type_of_change) + pth.filename().string();
             notification.emplace(msg);
-            update();
+
+            if(curr_option != Options::Filenames)
+                update();
+
             std::this_thread::sleep_for(std::chrono::seconds(1)); // wait 1 seconds before showing next changes
         });
 
@@ -343,7 +395,7 @@ namespace FileManage{
                 throw "\nEXCEPTION: File not exist"s;
 
             if(filesystem::last_write_time(name) == lastFileMod){
-                std::cout<<"\nINFO: You have the newest version of data!\n";
+                std::cout<<"\nINFO: You have the newest version of data storage!\n";
                 stopForSec(2);
                 return true;
             }
@@ -362,7 +414,7 @@ namespace FileManage{
             if(data_flow->is_open()){
                 while(!data_flow->eof()){
                     std::getline(*data_flow, temp);
-                    fileNameBuffer.emplace_back(temp);
+                    fileNameBuffer.emplace_back(TextValid::createFilename(temp));
                 }
 
                 for(const auto& f: fileNameBuffer)
@@ -389,6 +441,7 @@ namespace FileManage{
             return false;
         }
 
+        std::cout<<"Update storage of filenames!\n";
         return true;
     }
 

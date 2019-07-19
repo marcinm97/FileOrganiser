@@ -14,10 +14,6 @@
 
 using namespace std::experimental;
 
-// 1. Changing filenames
-// 2. Show extensions
-// 3. Show current state of files (real time)
-// 4. ...
 namespace FileManage{
 
     static constexpr const char* dir_name  = "MonitFiles";
@@ -36,34 +32,35 @@ namespace FileManage{
 
     }
 
+    namespace TextValid{
+        std::string createFilename(const std::string& file_name);
+    }
+
     namespace fs = filesystem;
 
     class FileOrganiser{
     public:
-
         FileOrganiser(const fs::path& main_dir): origin_directory(main_dir), notification(std::nullopt),
             monit(main_dir.string(), std::chrono::milliseconds(5000)), data_flow(std::nullopt), board{80,14} {
             createSmartMenu();
 
         }
-        void run();
+
+        // TODO: ^ more options with predicate (maybe vector with functional?)
+        // TODO: action to break thread with fileMonitor
+
+        void run();             // MAIN METHOD TO LAUNCH ALL APP
         bool isEmptyDirectory();
         void setFileNameIf(std::function<std::string()> const& pred); // or new menu to change options ...
-        // TODO: ^ more options with predicate (maybe vector with functional?)
-        // TODO: ^ set a filename according to database (mysql), textfile (.txt/.csv/.json) - data
-        // TODO:   show contented extensions (monit method)
-
-        void changeSingleFileName();
         void displayAllContainedExtensions();
-        bool readDataFromFile(); // TODO: add last save of modification and add if statement
         void numberOfFiles();
         void deleteAllContentedFiles();
         void runFileMonitor();  // new thread + notify to change string with message
-
         ~FileOrganiser();
     protected:
+        bool readDataFromFile();
         void fileChangesSubMenu();
-        void drawMenu();        // method use to draw all menu elements   1.
+        void drawMenu();        // method use to draw all menu elements
         void update();
     private:
         void stopForSec(int sec);
@@ -97,16 +94,7 @@ namespace FileManage{
 }
 
 
-
-
-
-
 //void testOrganiser(const std::string& file_name){
-////    auto w = filesystem::recursive_directory_iterator(file_name);
-////    w++;
-////
-////    std::cout<<w->path();
-//
 //    for(const auto& file: filesystem::directory_iterator(file_name,filesystem::directory_options::skip_permission_denied)){
 //        std::cout<<file.path()<<"\n";
 //        if(filesystem::is_directory(file.path())){
@@ -115,8 +103,5 @@ namespace FileManage{
 //            }
 //    }
 //}
-
-
-
 
 #endif //FILEORGANISER_FILEORGANISER_H
