@@ -36,6 +36,10 @@ stack
 list
 -
 
+C:/Users/Marcin/CLionProjects/FileOrganiser/FileOrganiser.cpp
+FileOrganiser.h
+C:/Users/Marcin/CLionProjects/FileOrganiser/FileOrganiser.h
+
 C:/Users/Marcin/CLionProjects/FileOrganiser/FileOrganiser.h
 FileChecker.h
 C:/Users/Marcin/CLionProjects/FileOrganiser/FileChecker.h
@@ -56,13 +60,5 @@ thread
 functional
 -
 fstream
--
-
-C:/Users/Marcin/CLionProjects/FileOrganiser/main.cpp
-FileOrganiser.h
-C:/Users/Marcin/CLionProjects/FileOrganiser/FileOrganiser.h
-thread
--
-cstdlib
 -
 

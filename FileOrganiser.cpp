@@ -49,7 +49,7 @@ namespace FileManage{
 
             switch(curr_option){
                 case Options::ShowFiles:  // 1.
-                    showContentedFiles();
+                    showContainedFiles();
                     break;
                 case Options::NumbFiles:  // 2.   ~
                     numberOfFiles();
@@ -96,7 +96,7 @@ namespace FileManage{
         }
     }
 
-    void FileOrganiser::showContentedFiles() {
+    void FileOrganiser::showContainedFiles() {
         if(this->isEmptyDirectory()) {
             std::cout << "INFO: Empty directory!\n";
             stopForSec(3);
@@ -110,7 +110,9 @@ namespace FileManage{
             //std::wcout<<f<<"\n";
             std::wcout << f.substr(idx++, f.size())<<"\n";
         }
-        stopForSec(5);
+        //stopForSec(15);
+        std::cout<<"\n";
+        system("pause");
     }
 
     void FileOrganiser::setFileNameIf(std::function<std::string()> const& pred){  // pred should returns correct name
@@ -153,8 +155,8 @@ namespace FileManage{
             std::cout<<"\n";
             return monit.isEmptyPath();
         }else{
-            std::cout<<"\nINFO: You don't use fileMonitor. Information may be incorrect!\n";
-            stopForSec(2);
+            std::cout<<"\nINFO: You don't use fileMonitor. Information may be incorrect!\n\n";
+            system("pause");
             return monit.isEmptyPath();
         }
     }
@@ -202,10 +204,11 @@ namespace FileManage{
                                 tmp = "no_name" + std::to_string(count++);     // protection before name conflict
 
                             return tmp;});
+                        std::cout<<"Successed!\n";
+                        stopForSec(2);
                     }
-                    displayAllContainedExtensions();
-                    std::cout<<"FILE\n";
-                    stopForSec(2);
+                    std::cout<<"\n";
+                    system("pause");
                     break;
                 case Action::SEQUENCE:
                     setFileNameIf([count = 1]() mutable -> std::string{ return std::to_string(count++); });
@@ -280,6 +283,8 @@ namespace FileManage{
         auto set = monit.getSetOfExtensions();
         std::cout<<"\nContented extensions:\n";
         std::copy(set.begin(), set.end(), std::ostream_iterator<std::string>(std::cout, "\n"));
+        std::cout<<"\n";
+        system("pause");
     }
 
     void FileOrganiser::runFileMonitor(){         // FILE MONITOR (OTHER THREAD)

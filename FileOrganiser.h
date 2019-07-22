@@ -55,7 +55,7 @@ namespace FileManage{
         void displayAllContainedExtensions();
         void numberOfFiles();
         void deleteAllContentedFiles();
-        void showContentedFiles();
+        void showContainedFiles();
         ~FileOrganiser();
     protected:
         void runFileMonitor();  // new thread + notify to change string with message
