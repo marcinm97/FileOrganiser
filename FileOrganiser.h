@@ -51,7 +51,8 @@ namespace FileManage{
 
         void run();             // MAIN METHOD TO LAUNCH ALL APP
         bool isEmptyDirectory();
-        void setFileNameIf(std::function<std::string()> const& pred); // or new menu to change options ...
+        void setFileNameIf(std::function<std::string()> const& pred); // pred is a generator of filenames
+        void duplicateFile(const filesystem::path& fname, const unsigned int ncopy, std::function<std::string()> const& pred);
         void displayAllContainedExtensions();
         void numberOfFiles();
         void deleteAllContentedFiles();
@@ -86,7 +87,7 @@ namespace FileManage{
         std::optional<std::string>   notification;
         std::optional<std::ifstream> data_flow;
         std::list<std::string>       menu;
-        std::vector<std::string>     fileNameBuffer;
+        std::set<std::string>     fileNameBuffer;
         filesystem::path             origin_directory;
         FileChecker                  monit;      // only for notify about newest changes (alert border)
         std::thread                  monitThread; // thread used to monit changes with FileChecker(launch only when fileMonitor is true)

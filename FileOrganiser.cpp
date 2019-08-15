@@ -54,14 +54,11 @@ namespace FileManage{
                 case Options::NumbFiles:  // 2.   ~
                     numberOfFiles();
                     break;
-                case Options::DelFiles:   // 3.   ~
+                case Options::DelFiles:   // 3.
                     deleteAllContentedFiles();
                     break;
-                case Options::Filenames:  // 4.   ~
+                case Options::Filenames:  // 4.
                     fileChangesSubMenu();
-//                    setFileNameIf([count = 1]() mutable {    // < ----- temporary lambda to change filename
-//                        return std::to_string(count++);
-//                    });
                     break;
                 case Options::SaveMonit:  // 5.    // (after launch) all changes available in cmake file
                     if(fileMonitor){
@@ -115,19 +112,50 @@ namespace FileManage{
         system("pause");
     }
 
+    void FileOrganiser::duplicateFile(const filesystem::path &fname, const unsigned int ncopy, std::function<std::string()> const& pred) {
+        try {
+            if (!filesystem::exists(fname))
+                throw "EXCEPTION: File not exist";
+
+            std::cout << "Before duplicate, you should remove other files.\n";
+
+            bool state;
+
+            std::cout << "Are You sure (1 - Yes | 0 - No) ?  ";
+            std::cin >> state;
+
+            if (state) {
+                for (const auto &rem: filesystem::directory_iterator(origin_directory)) {
+                    if (rem.path() != fname)
+                        filesystem::remove(rem.path());
+                }
+            }
+
+            for(int i = 0; i < ncopy; ++i){
+                filesystem::copy_file(fname, origin_directory/(pred() + fname.extension().string()));
+            }
+        }
+        catch(filesystem::filesystem_error& e){
+            std::cout << e.what() << "\n";
+        }
+    }
+
     void FileOrganiser::setFileNameIf(std::function<std::string()> const& pred){  // pred should returns correct name
         // 1. Iterate by all files
-        std::vector<filesystem::path> _paths;
+        std::set<filesystem::path> _paths;   // set - ordering - protection by bad rename
 
         for(auto file: filesystem::directory_iterator(origin_directory)){
-            //if(auto s = (pred() + file.path().extension().string()); !filesystem::exists(s))  // if not exist
-            _paths.push_back(file.path());
+            _paths.insert(file.path());
         }
+
         try{
-            for(const auto& f: _paths){
-                filesystem::rename(f, origin_directory/(pred() + f.extension().string()));
+            for(const auto& currfile: _paths){
+                auto s(origin_directory/(pred() + currfile.extension().string()));
+
+                if(currfile != s)
+                    filesystem::rename(currfile, s);
             }
-        }catch(filesystem::filesystem_error& e){
+        } catch(filesystem::filesystem_error& e){
             std::cout << e.what() << "\n";
         }
     }
@@ -169,7 +197,7 @@ namespace FileManage{
         }
 
         bool check = true;
-        enum class Action: unsigned int {FILE = 1, SEQUENCE, EXIT };
+        enum class Action: unsigned int {FILE = 1, SEQUENCE, DUPLICATE, EXIT };
         Action type;
 
         auto subUpdate([&type]() -> void {
@@ -178,7 +206,8 @@ namespace FileManage{
             std::cout << "Change type of action: \n\n";
             std::cout << "1. According to file (if accesible).\n";
             std::cout << "2. Numbers sequence (1 .. 2 .. 3 ..)\n";
-            std::cout<<  "3. Exit.\n";
+            std::cout << "3. Duplicate according to filename.\n";
+            std::cout<<  "4. Exit.\n";
             std::cout<<"\n->  YOUR CHOICE: ";
             std::cin >> temp;
 
@@ -191,9 +220,48 @@ namespace FileManage{
 
             switch(type){
                 case Action::FILE:
+
                     if(readDataFromFile()){
                         auto vect = fileNameBuffer;
                         setFileNameIf([&vect, count = 1]() mutable -> std::string {
+                            std::string tmp;
+                            if(!vect.empty()){
+                                tmp = *vect.begin();  //vect.back();
+                                vect.erase(vect.begin());
+                                //vect.pop_back();
+                            }else
+                                tmp = "no_name" + std::to_string(count++);     // protection before name conflict
+
+                            return tmp;});
+
+                        std::cout<<"Successed!\n";
+                        stopForSec(2);
+                    }
+
+                    std::cout<<"\n";
+                    system("pause");
+                    break;
+                case Action::SEQUENCE:
+                    setFileNameIf([count = 1]() mutable -> std::string { return std::to_string(count++); });
+                    std::cout<<"Successed!\n";
+                    stopForSec(2);
+                    break;
+                case Action::DUPLICATE:
+                    system("cls");
+                    if(readDataFromFile()){
+                        std::string name;
+                        int cpy = 1;
+
+                        std::cout << "\nEnter copyable filename (not related with new filenames): ";
+                        std::cin >> name;
+
+                        std::cout << "\nEnter number of duplicates: ";
+                        std::cin >> cpy;
+
+                        system("cls");
+
+                        auto vect = fileNameBuffer;
+                        duplicateFile(origin_directory/name, cpy, [&vect, count = 1]() mutable -> std::string {
 
                             std::string tmp;
                             if(!vect.empty()){
@@ -204,16 +272,8 @@ namespace FileManage{
                                 tmp = "no_name" + std::to_string(count++);     // protection before name conflict
 
                             return tmp;});
-                        std::cout<<"Successed!\n";
-                        stopForSec(2);
                     }
-                    std::cout<<"\n";
-                    system("pause");
-                    break;
-                case Action::SEQUENCE:
-                    setFileNameIf([count = 1]() mutable -> std::string{ return std::to_string(count++); });
-                    std::cout<<"Successed!\n";
-                    stopForSec(2);
+
                     break;
                 case Action::EXIT:
                     check = false;
@@ -238,10 +298,7 @@ namespace FileManage{
             }
         });
 
-
         std::string w(board.width, board.border);
-
-
 
         std::cout << w << "\n";
 
@@ -437,7 +494,7 @@ namespace FileManage{
             if(data_flow->is_open()){
                 while(!data_flow->eof()){
                     std::getline(*data_flow, temp);
-                    fileNameBuffer.emplace_back(TextValid::createFilename(temp));
+                    fileNameBuffer.insert(TextValid::createFilename(temp));
                 }
 
                 for(const auto& f: fileNameBuffer)
