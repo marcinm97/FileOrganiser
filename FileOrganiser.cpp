@@ -4,24 +4,20 @@ namespace FileManage{
 
     namespace TextValid{
         std::string createFilename(const std::string& file_name){
-            auto dot = file_name.find_first_of(".");
-            if(file_name[dot + 1] == ' ')
-                dot += 2;
-            else
-                ++dot;
+            auto fcpy = file_name;
 
-            std::string readyfname = file_name.substr(dot, file_name.size());
+            unsigned int pos = fcpy.find_first_of(' ');
 
-            std::replace(readyfname.begin(), readyfname.end(), ' ', '_');
+            fcpy.erase(pos,1);
+            // 1. Name Surname -> 1.Name_Surname
+
+            std::replace(fcpy.begin(), fcpy.end(),' ','_');
 
             //std::transform(file_name.begin() + ++dot, file_name.end(), std::inserter(readyfname, readyfname.begin()), [](auto c){return std::tolower(c);});
 
             //readyfname.erase(std::remove(readyfname.begin(), readyfname.end(),' '));
 
-
-            // tolower | remove space
-
-            return readyfname;
+            return fcpy;
         }
     }
 
@@ -107,12 +103,14 @@ namespace FileManage{
             //std::wcout<<f<<"\n";
             std::wcout << f.substr(idx++, f.size())<<"\n";
         }
-        //stopForSec(15);
+
         std::cout<<"\n";
         system("pause");
     }
 
     void FileOrganiser::duplicateFile(const filesystem::path &fname, const unsigned int ncopy, std::function<std::string()> const& pred) {
+        using namespace std::string_literals;
+
         if(this->isEmptyDirectory()) {
             std::cout << "INFO: Empty directory!\n";
             stopForSec(3);
@@ -121,7 +119,7 @@ namespace FileManage{
 
         try {
             if (!filesystem::exists(fname))
-                throw "EXCEPTION: File not exist";
+                throw "EXCEPTION: File not exist"s;
 
             if(monit.getCurrentNumberOfFiles() > 1){
                 bool state;
@@ -147,6 +145,11 @@ namespace FileManage{
         }
         catch(filesystem::filesystem_error& e){
             std::cout << e.what() << "\n";
+            system("pause");
+        }
+        catch(const std::string& e){
+            std::cout << e << "\n";
+            system("pause");
         }
     }
 
@@ -439,7 +442,6 @@ namespace FileManage{
         std::string copy = *num_it;
         std::string& menu_option  = *num_it;
 
-
         const std::string counter = "DIR/FILES - "s + std::to_string(curr_size);
 
         int dot_idx = menu_option.find_last_of(".:");
@@ -475,6 +477,7 @@ namespace FileManage{
         }
         catch(filesystem::filesystem_error& e){
             std::cout << e.what() << "\n";
+            system("pause");
         }
     }
 
@@ -524,14 +527,17 @@ namespace FileManage{
         }
         catch(std::ifstream::failure& f){
             std::cout << f.what() << "\n";
+            system("pause");
             return false;
         }
         catch(filesystem::filesystem_error& e){
             std::cout << e.what() << "\n";
+            system("pause");
             return false;
         }
         catch(const std::string& s){
             std::cout << s << "\n";
+            system("pause");
             return false;
         }
 

@@ -14,8 +14,7 @@
     <list default="true" id="b7a5f036-caf5-4ece-b2ed-f88ec972637f" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/FileOrganiser.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/FileOrganiser.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MonitFiles/1.pptx" beforeDir="false" afterPath="$PROJECT_DIR$/MonitFiles/1.pptx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/FileOrganiser.dir/CXX.includecache" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/FileOrganiser.dir/CXX.includecache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MonitFiles/1.pptx" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/FileOrganiser.dir/FileOrganiser.cpp.obj" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/FileOrganiser.dir/FileOrganiser.cpp.obj" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/FileOrganiser.dir/objects.a" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/FileOrganiser.dir/objects.a" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/FileOrganiser.exe" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/FileOrganiser.exe" afterDir="false" />
@@ -123,7 +122,7 @@
       <workItem from="1565730277646" duration="1028000" />
       <workItem from="1565780027994" duration="14160000" />
       <workItem from="1565862521427" duration="22360000" />
-      <workItem from="1565945550938" duration="5575000" />
+      <workItem from="1565945550938" duration="10979000" />
     </task>
     <servers />
   </component>
