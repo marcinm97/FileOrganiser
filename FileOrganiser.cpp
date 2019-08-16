@@ -113,27 +113,37 @@ namespace FileManage{
     }
 
     void FileOrganiser::duplicateFile(const filesystem::path &fname, const unsigned int ncopy, std::function<std::string()> const& pred) {
+        if(this->isEmptyDirectory()) {
+            std::cout << "INFO: Empty directory!\n";
+            stopForSec(3);
+            return;
+        }
+
         try {
             if (!filesystem::exists(fname))
                 throw "EXCEPTION: File not exist";
 
-            std::cout << "Before duplicate, you should remove other files.\n";
+            if(monit.getCurrentNumberOfFiles() > 1){
+                bool state;
 
-            bool state;
+                std::cout << "Before making duplicate, you should remove other files.\n";
 
-            std::cout << "Are You sure (1 - Yes | 0 - No) ?  ";
-            std::cin >> state;
+                std::cout << "Are You sure (1 - Yes | 0 - No) ?  ";
+                std::cin >> state;
 
-            if (state) {
-                for (const auto &rem: filesystem::directory_iterator(origin_directory)) {
-                    if (rem.path() != fname)
-                        filesystem::remove(rem.path());
+                if (state) {
+                    for (const auto &rem: filesystem::directory_iterator(origin_directory)) {
+                        if (rem.path() != fname)
+                            filesystem::remove(rem.path());
+                    }
                 }
             }
 
             for(int i = 0; i < ncopy; ++i){
                 filesystem::copy_file(fname, origin_directory/(pred() + fname.extension().string()));
             }
+
+            filesystem::remove(fname);
         }
         catch(filesystem::filesystem_error& e){
             std::cout << e.what() << "\n";
@@ -141,6 +151,11 @@ namespace FileManage{
     }
 
     void FileOrganiser::setFileNameIf(std::function<std::string()> const& pred){  // pred should returns correct name
+        if(this->isEmptyDirectory()) {
+            std::cout << "INFO: Empty directory!\n";
+            stopForSec(3);
+            return;
+        }
         // 1. Iterate by all files
         std::set<filesystem::path> _paths;   // set - ordering - protection by bad rename
 
@@ -252,7 +267,7 @@ namespace FileManage{
                         std::string name;
                         int cpy = 1;
 
-                        std::cout << "\nEnter copyable filename (not related with new filenames): ";
+                        std::cout << "\nEnter copyable filename (not related with new filenames) example: filename.txt: ";
                         std::cin >> name;
 
                         std::cout << "\nEnter number of duplicates: ";
@@ -327,7 +342,6 @@ namespace FileManage{
         std::cout << w;
 
         std::cout<<"\n->  YOUR CHOICE: ";
-
     }
 
     void FileOrganiser::displayAllContainedExtensions() {
