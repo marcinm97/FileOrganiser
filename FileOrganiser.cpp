@@ -6,11 +6,12 @@ namespace FileManage{
         std::string createFilename(const std::string& file_name){
             auto fcpy = file_name;
 
-            unsigned int pos = fcpy.find_first_of(' ');
+            unsigned int pos = fcpy.find_first_of('.');
+            fcpy.erase(pos, 1);
 
-            fcpy.erase(pos,1);
+            //fcpy.erase(pos,1);
             // 1. Name Surname -> 1.Name_Surname
-
+            // 10. Name Surname -> 10.Name_Surname
             std::replace(fcpy.begin(), fcpy.end(),' ','_');
 
             //std::transform(file_name.begin() + ++dot, file_name.end(), std::inserter(readyfname, readyfname.begin()), [](auto c){return std::tolower(c);});
@@ -511,7 +512,8 @@ namespace FileManage{
             if(data_flow->is_open()){
                 while(!data_flow->eof()){
                     std::getline(*data_flow, temp);
-                    fileNameBuffer.insert(TextValid::createFilename(temp));
+                    if(!temp.empty())
+                        fileNameBuffer.insert(TextValid::createFilename(temp));
                 }
 
                 for(const auto& f: fileNameBuffer)
